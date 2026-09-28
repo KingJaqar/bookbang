@@ -1,0 +1,142 @@
+/* ==== BOOKBANG FOOTER THEME ==== */
+.footer-section {
+  background: #ffffff;
+  color: #292326;
+  font-family: "Aptos", "Segoe UI", sans-serif;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid #e7dfe2;
+}
+
+/* HEADINGS */
+.footer-heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #76263f;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  text-shadow: none;
+}
+
+.footer-subheading {
+  font-size: 0.95rem;
+  color: #76263f;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* TEXT */
+.footer-text {
+  font-size: 0.85rem;
+  color: #5d5358;
+  line-height: 1.6;
+}
+
+/* LINKS */
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links a {
+  color: #4e454a;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #922f4e;
+  text-shadow: none;
+}
+
+/* NEWSLETTER */
+.input-group .form-control {
+  border-radius: 20px 0 0 20px;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  color: #292326;
+  border: 1px solid #e7dfe2;
+}
+
+.input-group .form-control::placeholder {
+  color: #766a70;
+}
+
+.btn-subscribe {
+  background-color: #76263f;
+  color: #fff;
+  border-radius: 0 20px 20px 0;
+  border: 1px solid #76263f;
+  transition: all 0.3s ease;
+}
+
+.btn-subscribe:hover {
+  background-color: #922f4e;
+}
+
+/* PAYMENTS */
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.payment-icon {
+  height: 28px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 3px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.payment-icon:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* SOCIAL */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  background: #1e1e1e;
+  color: #ff4747;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  border: 1px solid #333;
+}
+
+.social-link:hover {
+  background: #ff4747;
+  color: #fff;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 71, 71, 0.5);
+}
+
+/* COPYRIGHT */
+.copyright-bar {
+  background: rgba(20, 20, 20, 0.9);
+  text-align: center;
+  padding: 1rem 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-top: 1px solid #222;
+}
+
+.copyright-bar span {
+  color: #ff4747;
+}
