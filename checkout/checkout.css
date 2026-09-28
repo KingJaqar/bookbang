@@ -1,0 +1,8 @@
+.container { max-width: 700px; margin: 40px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+h2 { text-align:center; }
+input, select { width:100%; padding:8px; margin:5px 0 15px; border-radius:5px; border:1px solid #ccc; }
+button { padding:10px 20px; border:none; border-radius:6px; background:#3498db; color:#fff; cursor:pointer; }
+button:hover { background:#2980b9; }
+.payment-section { display:none; margin-top:15px; padding:15px; border:1px solid #ddd; border-radius:8px; background:#f9f9f9; }
+.checkout-items { margin-bottom: 20px; border-bottom:1px solid #ccc; padding-bottom:10px;}
+.checkout-items div { display:flex; justify-content:space-between; margin:5px 0;}

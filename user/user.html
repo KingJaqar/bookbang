@@ -1,0 +1,62 @@
+<!-- Bookbang/user/user.html
+
+ 
+user.html - fallback static page (will ask user to login) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account — BookBang (Guest)</title>
+<link rel="stylesheet" href="user.css">
+<link rel="stylesheet" href="../bookbang-theme.css">
+<link rel="stylesheet" href="/../navbar.css">
+</head>
+<body>
+<div id="navbar"></div>
+
+<main class="user-container">
+  <div class="profile-card guest">
+    <div class="profile-header">
+      <div class="avatar">G</div>
+      <div class="profile-name">
+        <h2>Guest</h2>
+        <p class="muted">Sign in to view your account</p>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <p>You are currently browsing as a guest. Please <a href="login.php">Sign in</a> or <a href="signup.php">Create an account</a> to view and manage your profile.</p>
+    </div>
+
+    <div class="profile-actions">
+      <a class="btn" href="signup.php">Create account</a>
+      <a class="btn ghost" href="login.php">Sign in</a>
+    </div>
+  </div>
+</main>
+
+<script>
+/* Load navbar and check auth status to update menu */
+fetch('navbar.php').then(r=>r.text()).then(html=>document.getElementById('navbar').innerHTML=html)
+.then(()=> {
+  fetch('auth_status.php').then(r=>r.json()).then(data=>{
+    const right = document.querySelector('#main-nav .navbar-right');
+    if (!right) return;
+    if (data.logged_in) {
+      right.innerHTML = `<a href="Homepage.php">Home</a>
+                         <a href="ProductPage.php">MyBooks</a>
+                         <a href="cart.html">Cart</a>
+                         <div class="user-chip"><img src="assets/bookbanglogo.png" alt="profile" class="mini"/><span>${data.username}</span></div>
+                         <a href="logout.php">Logout</a>`;
+    } else {
+      right.innerHTML = `<a href="Homepage.php">Home</a>
+                         <a href="ProductPage.php">MyBooks</a>
+                         <a href="cart.html">Cart</a>
+                         <a href="login.php">SignIn</a>`;
+    }
+  });
+});
+</script>
+</body>
+</html>

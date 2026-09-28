@@ -1,0 +1,282 @@
+/* Bookbang/cart/cart.css - Modern Design with RED Accent */
+
+:root {
+    /* Updated colors to align with the Navbar's red accent */
+    --accent: #ff4747;         /* Primary Red (from your existing theme) */
+    --accent-hover: #e03b3b;
+    --remove-color: #dc3545;
+    --muted: #6c757d;          
+    --text-dark: #343a40;      
+    --card-bg: #fff;           
+    --bg-light: #f4f7f9;       
+    --border-light: #e9ecef;   
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --pad-sm: 10px;
+    --pad-md: 15px;
+    --pad-lg: 20px;
+    font-family: 'Inter', 'Poppins', sans-serif; 
+}
+
+body {
+    margin: 0;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    font-family: var(--font-family);
+padding-left: 0 !important;
+    padding-right: 0 !important;}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #212529;
+}
+
+/* --- Cart Table Container (Simulated Modern Card) --- */
+table {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    /* Subtle shadow for a floating card effect */
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); 
+    overflow: hidden;
+}
+
+/* Header */
+th {
+    padding: var(--pad-md) var(--pad-lg);
+    text-align: left;
+    background: var(--bg-light);
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 2px solid var(--border-light); 
+}
+/* Center align quantity/price columns */
+th:nth-child(3),
+th:nth-child(4),
+th:nth-child(5),
+th:last-child {
+    text-align: center;
+    width: 100px;
+}
+
+/* Data Cells (Item Rows) */
+td {
+    padding: var(--pad-md) var(--pad-lg);
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1em;
+    vertical-align: middle;
+}
+
+/* Specific Cell Widths & Alignment */
+td:nth-child(1) { width: 1%; padding-right: 0; }
+td:nth-child(3),
+td:nth-child(4),
+td:nth-child(5),
+td:last-child {
+    text-align: center;
+}
+
+/* Remove bottom border from the last row */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Book image */
+td img {
+    width: 65px; 
+    height: 90px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    transition: transform 0.2s;
+}
+td img:hover {
+    transform: scale(1.03);
+}
+
+/* Quantity input */
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    padding: 8px 4px;
+    border: 1px solid #ced4da;
+    border-radius: var(--radius-sm);
+    -moz-appearance: textfield;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.quantity-input:focus {
+    /* Using the accent color for focus ring */
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(255, 71, 71, 0.25); 
+    outline: none;
+}
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove button */
+.remove-btn {
+    padding: 7px 14px;
+    background: var(--remove-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.remove-btn:hover {
+    background: #c82333;
+}
+
+/* --- Total & Checkout Area (Floating/Separated) --- */
+#cartForm {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.total {
+    text-align: right;
+    padding: var(--pad-md) 0;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin-top: 15px; 
+}
+
+#total {
+    color: var(--accent); 
+    font-size: 1.1em;
+}
+
+.checkout-btn {
+    padding: 12px 30px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    float: right;
+    margin-top: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.2s, box-shadow 0.2s;
+    /* Prominent shadow using the red accent */
+    box-shadow: 0 4px 10px rgba(255, 71, 71, 0.3); 
+}
+
+.checkout-btn:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 6px 15px rgba(255, 71, 71, 0.4);
+}
+
+/* Clear the float from the checkout button */
+#cartForm::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Empty cart message */
+p {
+    max-width: 900px;
+    margin: 20px auto;
+    text-align: center;
+}
+p[style="text-align:center;"] {
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    font-size: 1.1em;
+    color: var(--muted);
+}
+
+
+
+
+.cart-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+    font-size: 14px;
+
+    label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+    }
+
+    .remove-selected-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover { background: darken(#e74c3c, 10%); }
+    }
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr {
+        cursor: pointer;
+        &.selected {
+            background-color: #f0f8ff;
+        }
+
+        td:first-child {
+            cursor: pointer;
+        }
+
+        img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    }
+
+    .subtotal {
+        font-weight: bold;
+    }
+}
+
+.total {
+    font-size: 18px;
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: right;
+}
