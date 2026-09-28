@@ -1,0 +1,263 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Hero section */
+.hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1800/600');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    margin-bottom: 50px;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* Brands intro section */
+.brands-intro-section {
+    padding: 60px 20px;
+    background-color: #fff;
+    margin-bottom: 50px;
+}
+
+.brands-intro-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.brands-intro-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #222;
+}
+
+.brands-intro-section p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+/* Featured Brands */
+.featured-brands {
+    padding: 50px 20px;
+    background-color: #f5f5f5;
+}
+
+.featured-brands h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+.brand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.brand-card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.brand-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background-color: #f8f8f8;
+    padding: 20px;
+}
+
+.brand-info {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.brand-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.brand-info p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.brand-specialty {
+    font-size: 0.9rem;
+    color: #777;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.view-products-btn {
+    display: block;
+    text-align: center;
+    background-color: #222;
+    color: white;
+    padding: 12px 0;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    margin-top: auto;
+}
+
+.view-products-btn:hover {
+    background-color: #444;
+}
+
+/* Shop button container */
+.shop-btn-container {
+    text-align: center;
+    margin: 40px 0 20px;
+}
+
+.shop-btn {
+    display: inline-block;
+    background-color: #d32f2f;
+    color: white;
+    padding: 14px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.shop-btn:hover {
+    background-color: #b71c1c;
+}
+
+/* Brand Partners section */
+.brand-partners {
+    padding: 60px 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.brand-partners h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+.brand-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.brand-logo {
+    width: 150px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: filter 0.3s, opacity 0.3s;
+}
+
+.brand-logo:hover {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.brand-logo img {
+    max-width: 100%;
+    max-height: 80px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+    
+    .brands-intro-section h2,
+    .featured-brands h2,
+    .brand-partners h2 {
+        font-size: 1.8rem;
+    }
+    
+    .brand-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .brand-logos {
+        gap: 20px;
+    }
+    
+    .brand-logo {
+        width: 120px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .brands-intro-section p {
+        font-size: 1rem;
+    }
+    
+    .shop-btn {
+        padding: 12px 30px;
+    }
+}

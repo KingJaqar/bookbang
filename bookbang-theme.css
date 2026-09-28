@@ -1,0 +1,117 @@
+:root {
+    --bb-ink: #292326;
+    --bb-muted: #766a70;
+    --bb-line: #e7dfe2;
+    --bb-green: #76263f;
+    --bb-green-hover: #922f4e;
+    --bb-green-soft: #f5e9ed;
+    --bb-canvas: #ffffff;
+    --bb-paper: #ffffff;
+    --bb-lime: #e6c6d0;
+    --bb-danger: #a12b35;
+}
+
+html { scroll-behavior: smooth; }
+body {
+    color: var(--bb-ink) !important;
+    background-color: var(--bb-canvas);
+    font-family: "Aptos", "Segoe UI", sans-serif;
+}
+
+.login-container {
+    background: var(--bb-paper);
+}
+
+.login-container .left-section {
+    background: var(--bb-green);
+    color: #ffffff;
+}
+
+.login-container .brand-name,
+.login-container .tagline,
+.login-container .connect-section h3 {
+    color: #ffffff;
+}
+
+.login-container .right-section {
+    background: var(--bb-paper);
+}
+
+.login-container .right-section::before {
+    display: none;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--bb-ink);
+    font-family: Georgia, "Times New Roman", serif;
+    letter-spacing: 0;
+}
+
+a { color: var(--bb-green); }
+a:hover { color: var(--bb-green-hover); }
+
+button, input, select, textarea { font: inherit; }
+button, [type="submit"], [type="button"] {
+    border-radius: 3px;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid #b9788d;
+    outline-offset: 2px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+    border-color: #d9cbd0;
+    border-radius: 3px;
+}
+
+.login-card, .panel, .stat, .cart-table, .checkout-items, .product-details,
+.profile-card, .order-card, .book-details, .review-form {
+    border-color: var(--bb-line);
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(61, 28, 40, .07);
+}
+
+.login-card { border-top: 3px solid var(--bb-green); }
+.login-card h2 { color: var(--bb-ink); }
+.login-btn, .checkout-btn, .add-to-cart-btn, .buy-now-btn, .submit-btn {
+    border-color: var(--bb-green);
+    background: var(--bb-green);
+    color: #fff;
+}
+.login-btn:hover, .checkout-btn:hover, .add-to-cart-btn:hover, .buy-now-btn:hover, .submit-btn:hover {
+    border-color: var(--bb-green-hover);
+    background: var(--bb-green-hover);
+    color: #fff;
+}
+
+.cart-table, .checkout-items, .orders-table, .profile-card {
+    background: var(--bb-paper);
+}
+.cart-table th, .orders-table th {
+    background: var(--bb-green);
+    color: #fff;
+}
+
+.book-shelf {
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+    gap: clamp(12px, 2vw, 24px);
+    width: min(100% - 36px, 1200px);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.book-shelf .book {
+    width: min(180px, 100%);
+}
+
+@media (max-width: 700px) {
+    body { overflow-x: hidden; }
+    .login-container { min-height: 100vh; }
+    .login-card { max-width: 100%; }
+    .cart-table { font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

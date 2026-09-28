@@ -1,0 +1,335 @@
+
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('Assets/Logo/apparel.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Apparel Intro Section */
+.apparel-intro-section {
+    padding: 60px 20px;
+    background-color: white;
+}
+
+.apparel-intro-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.apparel-intro-content h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    color: #222;
+}
+
+.apparel-intro-content p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+/* Apparel Categories Section */
+.apparel-categories-section {
+    padding: 60px 20px;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.apparel-categories-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.apparel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.apparel-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.apparel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.apparel-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+.apparel-info {
+    padding: 25px 20px;
+    text-align: left;
+}
+
+.apparel-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.apparel-info p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.apparel-features {
+    font-size: 0.9rem;
+    color: #777;
+    font-style: italic;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.shop-btn-container {
+    margin-top: 50px;
+}
+
+.shop-btn {
+    display: inline-block;
+    background-color: #d32f2f;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.shop-btn:hover {
+    background-color: #b71c1c;
+}
+
+/* Apparel Benefits Section */
+.apparel-benefits {
+    padding: 60px 20px;
+    background-color: white;
+    text-align: center;
+}
+
+.apparel-benefits h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.benefit-item {
+    padding: 30px 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.benefit-icon img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.benefit-item h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.benefit-item p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* Category Filter Pills */
+.category-filter {
+    max-width: 1000px;
+    margin: 0 auto 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filter-pill {
+    background-color: #333;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+    background-color: #d32f2f;
+}
+
+/* Featured Item Badge */
+.apparel-card.featured::before {
+    content: 'TOP RATED';
+    position: absolute;
+    top: 15px;
+    right: -35px;
+    background-color: #d32f2f;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 5px 40px;
+    transform: rotate(45deg);
+    z-index: 1;
+}
+
+/* Quick View Overlay */
+.apparel-card {
+    position: relative;
+}
+
+.quick-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.apparel-card:hover .quick-view {
+    opacity: 1;
+}
+
+.quick-view-btn {
+    background-color: white;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quick-view-btn:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+    
+    .apparel-intro-content h2,
+    .apparel-categories-section h2,
+    .apparel-benefits h2 {
+        font-size: 1.8rem;
+    }
+    
+    .apparel-grid,
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefit-item {
+        padding: 20px 15px;
+    }
+}
+
+/* Season Tag */
+.season-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+/* Size Guide Button */
+.size-guide {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.size-guide:hover {
+    color: #d32f2f;
+}
