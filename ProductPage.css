@@ -1,0 +1,172 @@
+/* Bookbang/ProductPage.css  */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  margin: 0;
+  background-color: #ffffff !important;
+  font-family: "Poppins", sans-serif;
+  z-index: -1;
+  scroll-behavior: smooth;
+}
+
+
+
+/* Categories Section */
+.categories-section {
+    padding: 30px 20px;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.categories-section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4E342E;
+}
+
+
+
+
+
+
+/* === CLASSIC === */
+.book-header.c1 { background-image: url("ProductPageAssets/1Classic/c1.png"); }
+.book-header.c2 { background-image: url("ProductPageAssets/1Classic/c2.jpg"); }
+.book-header.c3 { background-image: url("ProductPageAssets/1Classic/c3.jpg"); }
+.book-header.c4 { background-image: url("ProductPageAssets/1Classic/c4.jpg"); }
+.book-header.c5 { background-image: url("ProductPageAssets/1Classic/c5.jpg"); }
+
+/* === MYSTERY === */
+.book-header.f1 { background-image: url("ProductPageAssets/2Fantasy/f1.jpg"); }
+.book-header.f2 { background-image: url("ProductPageAssets/2Fantasy/f2.jpg"); }
+.book-header.f3 { background-image: url("ProductPageAssets/2Fantasy/f3.jpg"); }
+.book-header.f4 { background-image: url("ProductPageAssets/2Fantasy/f4.jpg"); }
+.book-header.f5 { background-image: url("ProductPageAssets/2Fantasy/f5.jpg"); }
+
+/* === SCI-FI === */
+.book-header.sf1 { background-image: url("ProductPageAssets/3ScienceFiction/sf1.jpg"); }
+.book-header.sf2 { background-image: url("ProductPageAssets/3ScienceFiction/sf2.jpg"); }
+.book-header.sf3 { background-image: url("ProductPageAssets/3ScienceFiction/sf3.jpg"); }
+.book-header.sf4 { background-image: url("ProductPageAssets/3ScienceFiction/sf4.jpg"); }
+.book-header.sf5 { background-image: url("ProductPageAssets/3ScienceFiction/sf5.jpg"); }
+
+/* === ROMANCE === */
+.book-header.h1 { background-image: url("ProductPageAssets/4Horror/h1.jpg"); }
+.book-header.h2 { background-image: url("ProductPageAssets/4Horror/h2.jpg"); }
+.book-header.h3 { background-image: url("ProductPageAssets/4Horror/h3.jpg"); }
+.book-header.h4 { background-image: url("ProductPageAssets/4Horror/h4.jpg"); }
+.book-header.h5 { background-image: url("ProductPageAssets/4Horror/h5.jpg"); }
+
+/* === FANTASY === */
+.book-header.r1 { background-image: url("ProductPageAssets/5Romance/r1.jpg"); }
+.book-header.r2 { background-image: url("ProductPageAssets/5Romance/r2.jpg"); }
+.book-header.r3 { background-image: url("ProductPageAssets/5Romance/r3.jpg"); }
+.book-header.r4 { background-image: url("ProductPageAssets/5Romance/r4.jpg"); }
+.book-header.r5 { background-image: url("ProductPageAssets/5Romance/r5.jpg"); }
+
+
+.book-shelf {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  gap: 20px; 
+  justify-items: center;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  margin: 100px auto; 
+  opacity: 1;
+  position: relative; 
+  z-index: 2;
+}
+.book {
+  position: relative;
+  width: 180px;
+  height: 260px;
+  background-color: rgb(0, 0, 0);
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; /* match book width */
+  cursor: pointer;
+  background-color: lightgray;
+  transition: all 0.5s;
+  transform-origin: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-header {
+  height: 100%;
+  width: 100%;
+  display: block;
+  background-size: cover;        /* makes image fill the box */
+  background-position: center;   /* keeps image centered */
+  background-repeat: no-repeat;  /* prevents tiling */
+}
+
+
+.book:hover .cover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform: rotatey(-80deg);
+  -ms-transform: rotatey(-80deg);
+  transform: rotatey(-80deg);
+}
+
+.book-info {
+  text-align: center;
+  margin-top: 8px;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+}
+
+.book-info {
+  text-align: center;
+  margin-top: 8px;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6), 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.book-info h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px 0;
+  color: #ffffff;
+
+}
+
+.book-info p {
+  font-size: 12px;
+  margin: 2px 0;
+  color: #ffffff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.book-info .price {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffcc00; /* gold accent for price */
+  text-shadow: 0 0 6px rgba(255, 204, 0, 0.9), 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.book-info .details {
+  font-size: 11px;
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Bang | The Great Gatsby</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="ProductDescription.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="footer.css">
+  <link rel="stylesheet" href="bookbang-theme.css">
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- Product Container -->
+  <div class="product-container">
+
+    <!-- Book Cover -->
+    <div class="product-images">
+      <div class="main-image">
+        <img src="Assets/TheGreatGatsby.jpeg" alt="The Great Gatsby">
+        <div class="discount-badge">-25%</div>
+      </div>
+
+      <!-- Price and Rating Below Image -->
+      <div class="image-info">
+        <div class="price-container">
+          <span class="current-price">₱375.00</span>
+          <span class="original-price">₱500.00</span>
+        </div>
+        <div class="rating">
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <span class="review-count">4.5 (1,248 Reviews)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Details -->
+    <div class="product-details">
+      <h1 class="product-title">The Great Gatsby</h1>
+      <p class="author">by F. Scott Fitzgerald</p>
+      <p class="genre">Genre: Classic Literature</p>
+
+      <div class="product-description">
+        <p>
+          A timeless tale of wealth, love, and the pursuit of happiness in 1920s America. 
+          Dive into F. Scott Fitzgerald’s masterpiece that captures the essence of the Jazz Age, 
+          through the mysterious millionaire Jay Gatsby and his obsession with Daisy Buchanan.
+        </p>
+      </div>
+
+      <div class="options-section">
+        <h3>Format</h3>
+        <div class="size-options">
+          <div class="size-option selected">E-Book</div>
+          <div class="size-option">AudioBook</div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="action-buttons">
+        <button class="add-to-cart-btn">Add to Library</button>
+        <button class="buy-now-btn">Buy Book Now</button>
+      </div>
+
+      <span class="pickup-location">Available for instant download</span>
+    </div>
+
+  </div>
+
+  <button class="chat-button">
+    <i class="fas fa-comment"></i>
+  </button>
+
+<section class="rating-review-section">
+  <h2>Ratings and Book Reviews <span>(5)</span></h2>
+  <div class="rating-summary-container">
+
+    <!-- LEFT SIDE: Overall Rating -->
+    <div class="rating-left">
+      <div class="overall">
+        <h3>Overall rating</h3>
+        <div class="rating-info">
+          <p class="score">4.4 out of 5</p>
+          <div class="stars">★★★★☆</div>
+          <p class="review-count">(92)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Rating Bars -->
+    <div class="rating-right">
+      <div class="rating-bars">
+        <div class="bar-row"><span>5 stars</span><div class="bar"><div class="fill" style="width: 80%"></div></div><span>53</span></div>
+        <div class="bar-row"><span>4 stars</span><div class="bar"><div class="fill" style="width: 55%"></div></div><span>29</span></div>
+        <div class="bar-row"><span>3 stars</span><div class="bar"><div class="fill" style="width: 20%"></div></div><span>7</span></div>
+        <div class="bar-row"><span>2 stars</span><div class="bar"><div class="fill" style="width: 10%"></div></div><span>2</span></div>
+        <div class="bar-row"><span>1 star</span><div class="bar"><div class="fill" style="width: 5%"></div></div><span>1</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="review-section">
+  <h2>Ratings and Book Reviews</h2>
+
+  <div class="review">
+    <div class="review-header">
+      <span class="stars">⭐⭐⭐⭐⭐</span>
+      <h3>Loved it!</h3>
+    </div>
+    <p>Much like Bride, I devoured this book! I love it! And I loved the relationships! It was such a fun story!</p>
+    <p class="review-author">– Winter, October 13, 2025</p>
+  </div>
+
+  <div class="review">
+    <div class="review-header">
+      <span class="stars">⭐⭐⭐</span>
+      <h3>Eh..</h3>
+    </div>
+    <p>Plot and tropes were not good imo. But writing is always good with this author hence the 3 stars.</p>
+    <p class="review-author">– A.C., October 10, 2025</p>
+  </div>
+
+  <div class="review">
+    <div class="review-header">
+      <span class="stars">⭐⭐⭐⭐⭐</span>
+      <h3>Loved it!</h3>
+    </div>
+    <p>I really enjoyed this book! I can never go wrong with a book by Ali.</p>
+    <p class="review-author">– Erica, October 16, 2025</p>
+  </div>
+
+  <div class="write-review">
+    <textarea placeholder="Share your thoughts about this book..."></textarea>
+    <button class="submit-review-btn">Submit Review</button>
+  </div>
+</section>
+
+
+
+
+  <div id="footer"></div>
+
+  <script>
+    fetch('navbar.php').then(r => r.text()).then(d => document.getElementById('navbar').innerHTML = d);
+    fetch('footer.php').then(r => r.text()).then(d => document.getElementById('footer').innerHTML = d);
+  </script>
+
+</body>
+</html>

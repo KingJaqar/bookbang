@@ -1,0 +1,746 @@
+
+/* === Cursor & Select Fix === */
+body, 
+div, 
+section, 
+img, 
+p, 
+span, 
+h1, h2, h3, h4, h5, h6,
+button {
+  cursor: default;
+  user-select: none; /* Prevents accidental text selection */
+}
+
+/* Keep correct cursor for clickable things */
+a, 
+button, 
+.size-option, 
+.add-to-cart-btn, 
+.buy-now-btn, 
+.chat-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Keep correct text cursor for textarea or inputs only */
+textarea, 
+input, 
+.write-review textarea {
+  cursor: text;
+  user-select: text;
+}
+
+
+body {
+  background-color: #0f0f0f;
+  color: #f5f5f5;
+   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* === Product Container === */
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 950px;
+  margin: 40px auto;
+  background-color: #1b1b1b;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  gap: 30px;
+}
+
+/* === Product Image Section === */
+.product-images {
+  flex: 1;
+  min-width: 300px;
+}
+
+.main-image {
+  position: relative;
+  overflow: hidden;
+  background-color: #121212;
+}
+
+.main-image img {
+  width: 100%;
+  border: 1px solid #2a2a2a;
+  display: block;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff4747;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* === Price & Rating Below Image === */
+.image-info {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.price-container {
+  margin-bottom: 6px;
+}
+
+.current-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff4747;
+  margin-right: 8px;
+}
+
+.original-price {
+  font-size: 14px;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.stars {
+  color: #ffb347;
+  font-size: 14px;
+}
+
+.review-count {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* === Product Details === */
+.product-details {
+  flex: 2;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-title {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.author {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.genre {
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.product-description {
+  margin-bottom: 20px;
+  color: #ddd;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* === Format Options === */
+.options-section h3 {
+  font-size: 14px;
+  color: #ff4747;
+  margin-bottom: 8px;
+}
+
+.size-options {
+  display: flex;
+  gap: 10px;
+}
+
+.size-option {
+  padding: 6px 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  background-color: #252525;
+  color: white;
+  transition: 0.3s;
+}
+
+.size-option:hover {
+  border-color: #ff4747;
+  color: #ff4747;
+}
+
+.size-option.selected {
+  background-color: #ff4747;
+  color: white;
+  border-color: #ff4747;
+}
+
+/* === Buttons (Aligned at Bottom) === */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.add-to-cart-btn,
+.buy-now-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.add-to-cart-btn {
+  background-color: #1e1e1e;
+  border: 1px solid #ff4747;
+  color: white;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #ff4747;
+}
+
+.buy-now-btn {
+  background-color: #ff4747;
+  border: none;
+  color: white;
+}
+
+.buy-now-btn:hover {
+  background-color: #ff2f2f;
+}
+
+/* === Pickup Info === */
+.pickup-location {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* === Chat Button === */
+.chat-button {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ff4747;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.chat-button:hover {
+  background-color: #ff2f2f;
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+  .product-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .add-to-cart-btn,
+  .buy-now-btn {
+    width: 100%;
+  }
+}
+
+/* === Ratings & Reviews === */
+.rating-review-section {
+  background-color: #1b1b1b;
+  padding: 40px 25px;
+  color: #f5f5f5;
+  max-width: 950px;
+  margin: 60px auto 20px auto;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.rating-review-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ff4747;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 10px;
+}
+
+.rating-review-section h2 span {
+  color: #aaa;
+  font-weight: 400;
+}
+
+.rating-summary-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.rating-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.overall {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.overall h3 {
+  color: #ccc;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stars {
+  color: #ffb347;
+  font-size: 1.1rem;
+}
+
+.review-count {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* RIGHT SIDE */
+.rating-right {
+  flex: 1.5;
+}
+
+.rating-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #ddd;
+}
+
+.bar-row span:first-child {
+  width: 60px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.bar {
+  flex: 1;
+  height: 10px;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background-color: #ff4747;
+  border-radius: 4px;
+}
+
+.bar-row span:last-child {
+  width: 25px;
+  text-align: right;
+  color: #888;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rating-summary-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .rating-right {
+    width: 100%;
+  }
+}
+
+/* === RECOMMENDED BOOKS SECTION (UPDATED) === */
+.recommended-section {
+  text-align: center;
+  margin: 80px auto;
+  padding: 50px 20px;
+  max-width: 950px;
+  background-color: #1b1b1b;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.recommended-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #ff4747;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Center and align book cards */
+.book-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Individual book container */
+.book {
+  position: relative;
+  width: 120px;
+  height: 180px;
+  background-color: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.book:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(255, 71, 71, 0.4);
+}
+
+/* Book cover flip effect */
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #121212;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+  transform-origin: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book:hover .cover {
+  transform: rotateY(-80deg);
+}
+
+.book-header {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+}
+
+/* Info below the book */
+.book-info {
+  text-align: center;
+  margin-top: 10px;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+
+.book-info h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 5px 0;
+  color: #fff;
+}
+
+.book-info .price {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffcc00;
+}
+
+.book-info .details {
+  font-size: 11px;
+  color: #ccc;
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 1000px) {
+  .book-shelf {
+    gap: 20px;
+  }
+  .book {
+    width: 160px;
+    height: 230px;
+  }
+}
+
+@media (max-width: 700px) {
+  .book-shelf {
+    flex-direction: column;
+    align-items: center;
+  }
+  .book {
+    width: 70%;
+    max-width: 200px;
+  }
+}
+
+/* === CLASSIC === */
+.book-header.c1 { background-image: url("ProductPageAssets/1Classic/c1.png"); }
+.book-header.c2 { background-image: url("ProductPageAssets/1Classic/c2.jpg"); }
+.book-header.c3 { background-image: url("ProductPageAssets/1Classic/c3.jpg"); }
+.book-header.c4 { background-image: url("ProductPageAssets/1Classic/c4.jpg"); }
+.book-header.c5 { background-image: url("ProductPageAssets/1Classic/c5.jpg"); }
+
+/* === MYSTERY === */
+.book-header.f1 { background-image: url("ProductPageAssets/2Fantasy/f1.jpg"); }
+.book-header.f2 { background-image: url("ProductPageAssets/2Fantasy/f2.jpg"); }
+.book-header.f3 { background-image: url("ProductPageAssets/2Fantasy/f3.jpg"); }
+.book-header.f4 { background-image: url("ProductPageAssets/2Fantasy/f4.jpg"); }
+.book-header.f5 { background-image: url("ProductPageAssets/2Fantasy/f5.jpg"); }
+
+/* === SCI-FI === */
+.book-header.sf1 { background-image: url("ProductPageAssets/3ScienceFiction/sf1.jpg"); }
+.book-header.sf2 { background-image: url("ProductPageAssets/3ScienceFiction/sf2.jpg"); }
+.book-header.sf3 { background-image: url("ProductPageAssets/3ScienceFiction/sf3.jpg"); }
+.book-header.sf4 { background-image: url("ProductPageAssets/3ScienceFiction/sf4.jpg"); }
+.book-header.sf5 { background-image: url("ProductPageAssets/3ScienceFiction/sf5.jpg"); }
+
+/* === ROMANCE === */
+.book-header.h1 { background-image: url("ProductPageAssets/4Horror/h1.jpg"); }
+.book-header.h2 { background-image: url("ProductPageAssets/4Horror/h2.jpg"); }
+.book-header.h3 { background-image: url("ProductPageAssets/4Horror/h3.jpg"); }
+.book-header.h4 { background-image: url("ProductPageAssets/4Horror/h4.jpg"); }
+.book-header.h5 { background-image: url("ProductPageAssets/4Horror/h5.jpg"); }
+
+/* === FANTASY === */
+.book-header.r1 { background-image: url("ProductPageAssets/5Romance/r1.jpg"); }
+.book-header.r2 { background-image: url("ProductPageAssets/5Romance/r2.jpg"); }
+.book-header.r3 { background-image: url("ProductPageAssets/5Romance/r3.jpg"); }
+.book-header.r4 { background-image: url("ProductPageAssets/5Romance/r4.jpg"); }
+.book-header.r5 { background-image: url("ProductPageAssets/5Romance/r5.jpg"); }
+
+
+/* === REVIEW SECTION (Light / Modern Theme) === */
+.review-section {
+  background-color: #ffffff;
+  padding: 40px 25px;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  max-width: 950px;
+  margin: 20px auto 80px auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+-webkit-box-shadow: 0px 33px 12px -12px rgba(66, 68, 90, 1);
+-moz-box-shadow: 0px 33px 12px -12px rgba(66, 68, 90, 1);
+box-shadow: 0px 33px 12px -12px rgba(66, 68, 90, 1);
+}
+
+.review-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #b81d24;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* === Individual Reviews === */
+.review {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 20px 0;
+}
+
+.review:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-header h3 {
+  margin: 0;
+  color: #222;
+  font-size: 1.1rem;
+}
+
+.review p {
+  color: #555;
+  margin: 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.review-author {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* === Write Review Form === */
+.write-review {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: row-row;
+  gap: 15px;
+}
+
+/* Top row: name + rating + submit button */
+.write-review-top {
+  display: flex;
+  align-items: top;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Input and select styling */
+.write-review input[type="text"],
+.write-review select {
+
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+  width: 50%;
+  
+}
+
+.write-review input[type="text"]:focus,
+.write-review select:focus {
+  border-color: #b81d24;
+  outline: none;
+  
+}
+
+/* Textarea styling */
+.write-review textarea {
+  resize: none;
+  width: 60%;
+  height: 130px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fdfdfd;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+}
+
+.write-review textarea:focus {
+  border-color: #b81d24;
+  outline: none;
+}
+
+/* Submit button styling */
+.submit-review-btn {
+  background-color: #b81d24;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  width: 10%;
+}
+
+.submit-review-btn:hover {
+  background-color: #a0171f;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .write-review-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submit-review-btn {
+    width: 100%;
+  }
+}
+
+
+.success-message {
+  color: #4caf50;
+  background: #1e1e1e;
+  padding: 10px;
+  border-left: 4px solid #4caf50;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.error-message {
+  color: #ff4747;
+  background: #1e1e1e;
+  padding: 10px;
+  border-left: 4px solid #ff4747;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+

@@ -1,0 +1,138 @@
+<!-- Bookbang/login.html  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BookBang</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="bookbang-theme.css">
+</head>
+<body>
+    <!-- Your navbar will be included/imported here -->
+    
+    <main class="login-container">
+        <div class="left-section">
+            <div class="brand">
+                <div class="logo">
+                    <img src="assets/bookbanglogo.png" alt="Logo" width="90" height="90">
+                </div>
+                <span class="brand-name">BookBang</span>
+            </div>
+            
+            <div class="tagline">
+                <p>Not Just Books. It's a Bang of Ideas.</p>
+                <p>For Readers Who Live th Story.</p>
+                <p>Your Mind, Our Books, One Mission.</p>
+                <p>Ignite Knowledge Every Page.</p>
+            </div>
+            
+            <div class="connect-section">
+                <h3>Connect with us</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#1877F2"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon google">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <path d="M12.545 12.151L12.545 14.106L16.061 14.106C15.875 15.177 14.59 17.25 12.545 17.25C10.754 17.25 9.242 15.75 9.242 13.875C9.242 12 10.754 10.5 12.545 10.5C13.598 10.5 14.303 10.935 14.712 11.343L16.197 9.892C15.184 8.919 13.94 8.336 12.545 8.336C9.56 8.336 7.06 10.837 7.06 13.875C7.06 16.913 9.56 19.414 12.545 19.414C15.674 19.414 18 17.25 18 13.963C18 13.5 17.955 13.086 17.864 12.664L12.545 12.664L12.545 12.151Z" fill="#4285F4"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <path d="M12 2C14.717 2 15.056 2.01 16.122 2.06C17.187 2.11 17.912 2.277 18.55 2.525C19.21 2.779 19.766 3.123 20.322 3.678C20.8305 4.1779 21.224 4.78259 21.475 5.45C21.722 6.087 21.89 6.813 21.94 7.878C21.987 8.944 22 9.283 22 12C22 14.717 21.99 15.056 21.94 16.122C21.89 17.187 21.722 17.912 21.475 18.55C21.2247 19.2178 20.8311 19.8226 20.322 20.322C19.822 20.8303 19.2173 21.2238 18.55 21.475C17.913 21.722 17.187 21.89 16.122 21.94C15.056 21.987 14.717 22 12 22C9.283 22 8.944 21.99 7.878 21.94C6.813 21.89 6.088 21.722 5.45 21.475C4.78233 21.2245 4.17753 20.8309 3.678 20.322C3.16941 19.8222 2.77593 19.2175 2.525 18.55C2.277 17.913 2.11 17.187 2.06 16.122C2.013 15.056 2 14.717 2 12C2 9.283 2.01 8.944 2.06 7.878C2.11 6.812 2.277 6.088 2.525 5.45C2.77524 4.78218 3.1688 4.17732 3.678 3.678C4.17767 3.16923 4.78243 2.77573 5.45 2.525C6.088 2.277 6.812 2.11 7.878 2.06C8.944 2.013 9.283 2 12 2Z" fill="#E1306C"></path>
+                            <path d="M12 7C9.24 7 7 9.24 7 12C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12C17 9.24 14.76 7 12 7ZM12 15C10.35 15 9 13.65 9 12C9 10.35 10.35 9 12 9C13.65 9 15 10.35 15 12C15 13.65 13.65 15 12 15Z" fill="white"></path>
+                            <circle cx="17.5" cy="6.5" r="1.5" fill="white"></circle>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon tiktok">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <path d="M16.6 5.82C15.9081 5.03962 15.5346 4.03743 15.54 3H12.45V15.4C12.4262 16.071 12.1429 16.7066 11.6598 17.1729C11.1767 17.6393 10.5313 17.8999 9.86 17.9C8.44 17.9 7.26 16.74 7.26 15.3C7.26 13.58 8.92 12.29 10.63 12.82V9.66C7.18 9.2 4.16 11.88 4.16 15.3C4.16 18.63 6.92 21 9.85 21C12.99 21 15.54 18.45 15.54 15.3V9.01C16.793 9.90985 18.2974 10.3926 19.84 10.38V7.28C19.84 7.28 18.04 7.42 16.6 5.82Z" fill="#FF0050"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="login-card">
+                <h2>Login</h2>
+                
+                <form class="login-form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <?php if (!empty($error_message)): ?>
+                        <div class="error-message" style="color: red; margin-bottom: 10px;">
+                            <?php echo $error_message; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="form-group">
+                        <input type="text" id="email" name="email" placeholder="Email or username" autocomplete="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember" value="1">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="forgot-password.php" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">LOGIN</button>
+                    
+                    <div class="login-divider">
+                        <span>OR</span>
+                    </div>
+                    
+                    <div class="social-login">
+                        <a href="facebook-login.php" class="social-login-btn facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="#1877F2"></path>
+                            </svg>
+                            Facebook
+                        </a>
+                      <a href="google-login.php" class="social-login-btn google">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+        <path d="M12.545 12.151L12.545 14.106L16.061 14.106C15.875 15.177 14.59 17.25 12.545 17.25C10.754 17.25 9.242 15.75 9.242 13.875C9.242 12 10.754 10.5 12.545 10.5C13.598 10.5 14.303 10.935 14.712 11.343L16.197 9.892C15.184 8.919 13.94 8.336 12.545 8.336C9.56 8.336 7.06 10.837 7.06 13.875C7.06 16.913 9.56 19.414 12.545 19.414C15.674 19.414 18 17.25 18 13.963C18 13.5 17.955 13.086 17.864 12.664L12.545 12.664L12.545 12.151Z" fill="#4285F4"></path>
+    </svg>
+    Google
+</a>
+
+                    </div>
+                    
+                    <p class="signup-link">Don't have an account? <a href="signup.php">Signup</a></p>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Script for toggling password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                const togglePassword = document.createElement('span');
+                togglePassword.classList.add('password-toggle');
+                togglePassword.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+                passwordInput.parentNode.appendChild(togglePassword);
+                
+                togglePassword.addEventListener('click', function() {
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                    } else {
+                        passwordInput.type = 'password';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!-- Bookbang/Homepage.html -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Bang</title>
+
+  <!-- CSS -->
+   <link rel="stylesheet" href="Homepage.css" />
+     <link rel="stylesheet" href="Carousel.css" />
+  <!-- Include your existing CSS files here -->
+  <link rel="stylesheet" href="footer.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<link rel="stylesheet" href="bookbang-theme.css" />
+</head>
+<body>
+
+ <div class="carousel">
+<div id="navbar"></div>
+<!-- Item 1-6 -------------------------------------------------------------------------------- -->
+    <div class="list">			
+        <div class="item">		
+            <div class="poster">
+				<div class="CarouselMoviePosters"><img src="Assets/Jaws.jpg"></div>
+			</div>
+
+            <div class="introduce">
+                <div class="title">Top Books This Week!</div>
+                <div class="topic">Jaws</div>
+                <div class="des">
+                    On the small resort town of Amity (Long Island), a great white shark begins attacking swimmers. Local police chief Brody, a marine hunter and a shark fisherman team up to kill the beast. The novel explores communal fear, denial of danger and nature’s power.
+                </div>
+                <button class="seeMore">BUY NOW &#8599</button>
+            </div>
+		</div>
+        
+         <!-- 2. THE GREAT GATSBY -->
+  <div class="item">
+    <div class="poster">
+      <div class="CarouselMoviePosters"><img src="Assets/TheGreatGatsby.jpeg" alt="The Great Gatsby"></div>
+    </div>
+
+    <div class="introduce">
+      <div class="title">Top Books This Week!</div>
+      <div class="topic">The Great Gatsby</div>
+      <div class="des">
+        F. Scott Fitzgerald’s masterpiece follows Jay Gatsby, a mysterious millionaire, and his obsession with the beautiful Daisy Buchanan. The novel captures the glittering decadence and moral decay of the Jazz Age.
+      </div>
+      <button class="seeMore">BUY NOW &#8599;</button>
+    </div>
+  </div>
+
+        <!-- 3. CARAVAL -->
+  <div class="item">
+    <div class="poster">
+      <div class="CarouselMoviePosters"><img src="Assets/Caraval.jpg" alt="Caraval"></div>
+    </div>
+
+    <div class="introduce">
+      <div class="title">Top Books This Week!</div>
+      <div class="topic">Caraval</div>
+      <div class="des">
+        A dazzling fantasy by Stephanie Garber where two sisters enter a magical competition filled with illusions and secrets. Love, danger, and mystery blend in this captivating story.
+      </div>
+      <button class="seeMore">BUY NOW &#8599;</button>
+    </div>
+  </div>
+
+       <!-- 4. POWERLESS -->
+  <div class="item">
+    <div class="poster">
+      <div class="CarouselMoviePosters"><img src="Assets/Powerless.jpg" alt="Powerless"></div>
+    </div>
+
+    <div class="introduce">
+      <div class="title">Top Books This Week!</div>
+      <div class="topic">Powerless</div>
+      <div class="des">
+        A fantasy romance by Lauren Roberts about a girl hiding a dangerous secret in a world ruled by powerful elites. Survival depends on deception, courage, and forbidden love.
+      </div>
+      <button class="seeMore">BUY NOW &#8599;</button>
+    </div>
+  </div>
+
+
+       <!-- 5. IT -->
+  <div class="item">
+    <div class="poster">
+      <div class="CarouselMoviePosters"><img src="Assets/It.webp" alt="It"></div>
+    </div>
+    <div class="introduce">
+      <div class="title">Top Books This Week!</div>
+      <div class="topic">It</div>
+      <div class="des">
+        Stephen King’s terrifying epic about seven friends who face an ancient evil haunting their town — both in childhood and adulthood. A story of trauma, friendship, and fear itself.
+      </div>
+      <button class="seeMore">BUY NOW &#8599;</button>
+    </div>
+  </div>
+        <!-- 6. EXILES -->
+  <div class="item">
+    <div class="poster">
+      <div class="CarouselMoviePosters"><img src="Assets/Exiles.jpg" alt="Exiles"></div>
+    </div>
+
+    <div class="introduce">
+      <div class="title">Top Books This Week!</div>
+      <div class="topic">Exiles</div>
+      <div class="des">
+        Jane Harper’s gripping mystery follows federal investigator Aaron Falk as he unravels secrets surrounding a mother’s disappearance during a small-town festival.
+      </div>
+      <button class="seeMore">BUY NOW &#8599;</button>
+    </div>
+  </div>
+</div>
+
+    <div class="arrows">
+        <button id="prev"><</button>
+        <button id="next">></button>
+    </div>
+</div>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <ul class="announcement-slider">
+      <li>SAVE UP TO 50% OFF ON SELECTED ITEMS</li>
+      <li>Spend ₱4,999 & Get ₱100 Discount!</li>
+    </ul>
+  </div>
+
+    <div class="text-center"><h3>New Arrivals</h3></div>
+
+ <div class="book-shelf">
+  <div class="book">
+    <div class="cover">
+      <div class="book-header LifeofPi"></div>
+    </div>
+    <div class="book-info">
+      <h3>The Enigma of Arrival</h3>
+      <p>Author: V.S. Naipaul</p>
+      <p>Genre: Literary Fiction</p>
+      <p class="price">₱595.00</p>
+      <p class="details">Pages: 368,<br> Picador Collection,<br> Nobel Winner</p>
+    </div>
+  </div>
+
+  <div class="book">
+    <div class="cover">
+      <div class="book-header Thedevilwearprada"></div>
+    </div>
+    <div class="book-info">
+      <h3>Rosy Is My Relative</h3>
+      <p>Author: Gerald Durrell</p>
+      <p>Genre: Comic Novel</p>
+      <p class="price">₱425.00</p>
+      <p class="details">Pages: 240,<br> Paperback,<br> Uproarious Comedy</p>
+    </div>
+  </div>
+
+  <div class="book">
+    <div class="cover">
+      <div class="book-header Anoldsoul"></div>
+    </div>
+    <div class="book-info">
+      <h3>The Picture of Dorian Gray</h3>
+      <p>Author: Oscar Wilde</p>
+      <p>Genre: Classic Fiction</p>
+      <p class="price">₱499.00</p>
+      <p class="details">Pages: 304,<br> Timeless Morality Tale</p>
+    </div>
+  </div>
+
+  <div class="book">
+    <div class="cover">
+      <div class="book-header Dune"></div>
+    </div>
+    <div class="book-info">
+      <h3>Pride and Prejudice</h3>
+      <p>Author: Jane Austen</p>
+      <p>Genre: Romance</p>
+      <p class="price">₱550.00</p>
+      <p class="details">Pages: 352,<br> Penguin Edition</p>
+    </div>
+  </div>
+
+  <div class="book">
+    <div class="cover">
+      <div class="book-header Yellowface"></div>
+    </div>
+    <div class="book-info">
+      <h3>Great Expectations</h3>
+      <p>Author: Charles Dickens</p>
+      <p>Genre: Classic Literature</p>
+      <p class="price">₱620.00</p>
+      <p class="details">Pages: 480,<br> Illustrated Edition</p>
+    </div>
+  </div>
+</div> <!-- book-container -->
+
+  
+  <!-- Floating Chat Button (Optional) -->
+  <div class="floating-chat">
+    <button class="btn btn-danger rounded-circle p-3">
+      <i class="bi bi-chat-fill"></i>
+    </button>
+  </div>
+
+
+ <div class="brief-description">
+  <h3 class="text-center">A world of reading awaits you</h3>
+  <p class="text-center">
+    Create a bookbang account and sign up for our emails. Find out about new releases, shop deals on books, and get reading recommendations from our team.
+  </p>
+  <p class="text-center">
+    Discover bestsellers, indie gems, and exclusive digital releases to fill your virtual bookshelf anytime, anywhere!
+  </p>
+  <div class="text-center"><button>Create Account</button></div>
+</div>
+
+
+
+
+
+
+<div id="footer"></div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script src="map.js"></script>
+<script src="Carousel.js"></script>
+<script>
+  // Load the navbar
+  fetch('navbar.php')
+    .then(res => res.text())
+    .then(data => document.getElementById('navbar').innerHTML = data);
+
+  // Load the footer
+  fetch('footer.php')
+    .then(res => res.text())
+    .then(data => document.getElementById('footer').innerHTML = data);
+</script>
+</body>
+</html>
