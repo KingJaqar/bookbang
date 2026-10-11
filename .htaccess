@@ -2,6 +2,7 @@ DirectoryIndex index.php
 Options -Indexes
 
 RewriteEngine On
+RewriteBase /
 RewriteRule ^login\.html$ login.php [R=302,L]
 RewriteRule ^signup\.html$ signup.php [R=302,L]
 RewriteRule ^Homepage\.html$ Homepage.php [R=302,L]
