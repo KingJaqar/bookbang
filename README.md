@@ -1,5 +1,24 @@
 # BookBang Setup
 
+## Vercel storefront
+
+Vercel deploys the public catalogue from the repository root using `npm run build`
+and serves `dist/`. The build creates `index.html` from the existing homepage,
+embeds the navigation and footer, and copies only public styles, scripts, and
+book images. PHP source, Composer dependencies, configuration files, and database
+files are not published. `vercel.json` keeps these build settings in GitHub.
+
+Run `npm run build` with Node.js to verify the storefront locally. No npm
+dependencies are required. Generated `dist/` files should not be committed.
+
+The Vercel storefront supports browsing only. Accounts, carts, checkout, and
+reviews require a separately hosted PHP/MySQL backend; their links currently
+show a service availability page. Legacy homepage and catalogue PHP URLs route
+to the corresponding public HTML pages. Other PHP URLs show the availability
+page instead of exposing source. The PHP application below remains available
+for local hosting; deploying it requires a database, persistent sessions, and
+storage for uploaded files.
+
 ## Requirements
 
 - PHP 8.1 or newer with `mysqli` and `mysqlnd` enabled
