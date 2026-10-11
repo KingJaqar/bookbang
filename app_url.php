@@ -2,10 +2,10 @@
 function bookbang_app_base(): string
 {
     $scriptPath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
-    $appPath = rtrim(dirname($scriptPath), '/');
+    $appPath = rtrim(str_replace('\\', '/', dirname($scriptPath)), '/');
 
     if (in_array(basename($appPath), ['cart', 'checkout', 'orders', 'user', 'auth', 'account'], true)) {
-        $appPath = rtrim(dirname($appPath), '/');
+        $appPath = rtrim(str_replace('\\', '/', dirname($appPath)), '/');
     }
 
     return $appPath === '' ? '' : $appPath;

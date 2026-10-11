@@ -3,10 +3,8 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/Homepage.php", "destination": "/index.html" },
-    { "source": "/ProductPage.php", "destination": "/ProductPage.html" },
-    { "source": "/ProductDescription.php", "destination": "/ProductDescription.html" },
-    { "source": "/:path*.php", "destination": "/unavailable.html" }
+  "redirects": [
+    { "source": "/unavailable.html", "destination": "https://bookbang.xo.je/help.php", "permanent": false },
+    { "source": "/:path*", "destination": "https://bookbang.xo.je/:path*", "permanent": false }
   ]
 }

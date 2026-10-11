@@ -1,6 +1,5 @@
 <?php
-session_start();
-require_once __DIR__ . '/db_connect.php';
+require_once __DIR__ . '/app.php';
 
 if (empty($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -43,7 +42,7 @@ if (empty($_SESSION['admin_csrf'])) {
     $_SESSION['admin_csrf'] = bin2hex(random_bytes(32));
 }
 
-$views = ['overview', 'books', 'transactions', 'customers'];
+$views = ['overview', 'books', 'transactions', 'customers', 'subscribers'];
 $view = $_GET['view'] ?? 'overview';
 if (!in_array($view, $views, true)) {
     $view = 'overview';
@@ -115,6 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
             $_SESSION['admin_flash'] = 'Book deleted.';
             $redirectView = 'books';
+        } elseif ($action === 'update_order') {
+            $orderId=(int)($_POST['transaction_id'] ?? 0); $status=$_POST['status'] ?? '';
+            if(!in_array($status,['pending','confirmed','shipped','delivered','cancelled'],true)) throw new InvalidArgumentException('Choose a valid order status.');
+            $order=bb_one('SELECT payment_method,payment_data FROM transactions WHERE transaction_id=?','i',[$orderId]);
+            if(!$order) throw new InvalidArgumentException('Order not found.');
+            $data=json_decode($order['payment_data'] ?? '{}',true) ?: [];
+            $data['status']=$status; $data['payment_status']=$status==='delivered' ? 'paid' : 'unpaid';
+            bb_query('UPDATE transactions SET payment_data=? WHERE transaction_id=?','si',[json_encode($data),$orderId]);
+            $_SESSION['admin_flash']='Order status updated.'; $redirectView='transactions';
         } elseif ($action === 'change_password') {
             $currentPassword = $_POST['current_password'] ?? '';
             $newPassword = $_POST['new_password'] ?? '';
@@ -136,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $stmt->close();
             session_regenerate_id(true);
+            $_SESSION['auth_hash']=hash('sha256',$newHash);
             $_SESSION['admin_flash'] = 'Admin password updated.';
         } else {
             throw new InvalidArgumentException('Unknown admin action.');
@@ -172,7 +181,7 @@ if ($view === 'books') {
     $transactions = $conn->query("SELECT t.transaction_id, t.user_id, t.first_name, t.last_name, t.email, t.payment_method, t.total, t.created_at, COALESCE(NULLIF(CONCAT_WS(' ', u.first_name, u.last_name), ''), u.username, 'Guest checkout') AS customer_name FROM transactions t LEFT JOIN users u ON u.user_id = t.user_id ORDER BY t.created_at DESC")->fetch_all(MYSQLI_ASSOC);
     $transactionId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
     if ($transactionId) {
-        $stmt = $conn->prepare("SELECT t.transaction_id, t.user_id, t.first_name, t.last_name, t.email, t.phone, t.payment_method, t.total, t.created_at, COALESCE(NULLIF(CONCAT_WS(' ', u.first_name, u.last_name), ''), u.username, 'Guest checkout') AS customer_name FROM transactions t LEFT JOIN users u ON u.user_id = t.user_id WHERE t.transaction_id = ?");
+        $stmt = $conn->prepare("SELECT t.transaction_id, t.user_id, t.first_name, t.last_name, t.email, t.phone, t.payment_method, t.payment_data, t.total, t.created_at, COALESCE(NULLIF(CONCAT_WS(' ', u.first_name, u.last_name), ''), u.username, 'Guest checkout') AS customer_name FROM transactions t LEFT JOIN users u ON u.user_id = t.user_id WHERE t.transaction_id = ?");
         $stmt->bind_param('i', $transactionId);
         $stmt->execute();
         $selectedTransaction = $stmt->get_result()->fetch_assoc();
@@ -200,6 +209,7 @@ if ($view === 'books') {
     }
 }
 
+if ($view === 'subscribers') { bb_schema(); $subscribers=bb_rows('SELECT email,created_at FROM newsletter_subscribers ORDER BY created_at DESC'); }
 $formBook = $editBook ?: ['book_id' => '', 'title' => '', 'author' => '', 'genre' => '', 'description' => '', 'image' => '', 'price' => '', 'discount' => '0', 'pages' => '0', 'collection' => ''];
 ?>
 <!DOCTYPE html>
@@ -220,6 +230,7 @@ $formBook = $editBook ?: ['book_id' => '', 'title' => '', 'author' => '', 'genre
             <a class="<?= $view === 'books' ? 'active' : '' ?>" href="admin.php?view=books">Books</a>
             <a class="<?= $view === 'transactions' ? 'active' : '' ?>" href="admin.php?view=transactions">Transactions</a>
             <a class="<?= $view === 'customers' ? 'active' : '' ?>" href="admin.php?view=customers">Customers</a>
+            <a class="<?= $view === 'subscribers' ? 'active' : '' ?>" href="admin.php?view=subscribers">Subscribers</a>
         </nav>
         <div class="sidebar-bottom"><a href="Homepage.php">View storefront</a><a href="logout.php">Sign out</a></div>
     </aside>
@@ -267,10 +278,12 @@ $formBook = $editBook ?: ['book_id' => '', 'title' => '', 'author' => '', 'genre
                 </tbody></table></div>
             </section>
         <?php elseif ($view === 'transactions'): ?>
-            <?php if ($selectedTransaction): ?><section class="panel detail-panel"><div class="panel-heading"><div><p class="eyebrow">TRANSACTION #<?= (int) $selectedTransaction['transaction_id'] ?></p><h2><?= admin_h($selectedTransaction['customer_name']) ?></h2></div><a class="button secondary" href="admin.php?view=transactions">Back to transactions</a></div><p><?= admin_h($selectedTransaction['email']) ?> · <?= admin_h($selectedTransaction['phone'] ?? '') ?> · <?= admin_h($selectedTransaction['payment_method']) ?> · <?= admin_h($selectedTransaction['created_at']) ?></p><div class="table-wrap"><table><thead><tr><th>Book</th><th>Qty</th><th>Unit price</th><th>Line total</th></tr></thead><tbody><?php foreach ($transactionItems as $item): ?><tr><td><?= admin_h($item['title']) ?></td><td><?= (int) $item['qty'] ?></td><td>₱<?= number_format((float) $item['price'], 2) ?></td><td>₱<?= number_format((float) $item['price'] * (int) $item['qty'], 2) ?></td></tr><?php endforeach; ?></tbody></table></div><p class="total-line">Transaction total <strong>₱<?= number_format((float) $selectedTransaction['total'], 2) ?></strong></p></section><?php endif; ?>
+            <?php if ($selectedTransaction): ?><section class="panel detail-panel"><div class="panel-heading"><div><p class="eyebrow">TRANSACTION #<?= (int) $selectedTransaction['transaction_id'] ?></p><h2><?= admin_h($selectedTransaction['customer_name']) ?></h2></div><a class="button secondary" href="admin.php?view=transactions">Back to transactions</a></div><p><?= admin_h($selectedTransaction['email']) ?> · <?= admin_h($selectedTransaction['phone'] ?? '') ?> · <?= admin_h($selectedTransaction['payment_method']) ?> · <?= admin_h($selectedTransaction['created_at']) ?></p><div class="table-wrap"><table><thead><tr><th>Book</th><th>Qty</th><th>Unit price</th><th>Line total</th></tr></thead><tbody><?php foreach ($transactionItems as $item): ?><tr><td><?= admin_h($item['title']) ?></td><td><?= (int) $item['qty'] ?></td><td>₱<?= number_format((float) $item['price'], 2) ?></td><td>₱<?= number_format((float) $item['price'] * (int) $item['qty'], 2) ?></td></tr><?php endforeach; ?></tbody></table></div><?php $delivery=json_decode($selectedTransaction['payment_data'] ?? '{}',true) ?: []; ?><p>Delivery: <?= admin_h($delivery['address'] ?? '') ?>, <?= admin_h($delivery['city'] ?? '') ?> <?= admin_h($delivery['postal_code'] ?? '') ?></p><p>Status: <?= admin_h($delivery['status'] ?? 'pending') ?> · Payment: <?= admin_h($delivery['payment_status'] ?? 'unpaid') ?></p><form method="post"><input type="hidden" name="csrf" value="<?= admin_h($_SESSION['admin_csrf']) ?>"><input type="hidden" name="action" value="update_order"><input type="hidden" name="view" value="transactions"><input type="hidden" name="transaction_id" value="<?= (int)$selectedTransaction['transaction_id'] ?>"><label>Order status<select name="status"><?php foreach(['pending','confirmed','shipped','delivered','cancelled'] as $status): ?><option value="<?= $status ?>" <?= ($delivery['status'] ?? 'pending')===$status?'selected':'' ?>><?= ucfirst($status) ?></option><?php endforeach; ?></select></label><button>Update status</button></form><p class="total-line">Transaction total <strong>₱<?= number_format((float) $selectedTransaction['total'], 2) ?></strong></p></section><?php endif; ?>
             <section class="panel table-panel"><div class="panel-heading"><div><p class="eyebrow">PURCHASES</p><h2>Transactions <span class="count"><?= count($transactions) ?></span></h2></div></div><div class="table-wrap"><table><thead><tr><th>Transaction</th><th>Customer</th><th>Payment</th><th>Total</th><th>Date</th><th></th></tr></thead><tbody>
             <?php foreach ($transactions as $transaction): ?><tr><td>#<?= (int) $transaction['transaction_id'] ?></td><td><strong><?= admin_h($transaction['customer_name']) ?></strong><small><?= admin_h($transaction['email']) ?></small></td><td><?= admin_h($transaction['payment_method']) ?></td><td>₱<?= number_format((float) $transaction['total'], 2) ?></td><td><?= admin_h($transaction['created_at']) ?></td><td><a class="text-action" href="admin.php?view=transactions&amp;id=<?= (int) $transaction['transaction_id'] ?>">Details</a></td></tr><?php endforeach; ?>
             </tbody></table></div></section>
+        <?php elseif ($view === 'subscribers'): ?>
+            <section class="panel table-panel"><h2>Newsletter subscribers</h2><p>These customers opted in to book updates. Email delivery requires a configured sending service.</p><table><thead><tr><th>Email</th><th>Subscribed</th></tr></thead><tbody><?php foreach ($subscribers as $subscriber): ?><tr><td><?= admin_h($subscriber['email']) ?></td><td><?= admin_h($subscriber['created_at']) ?></td></tr><?php endforeach; ?></tbody></table></section>
         <?php else: ?>
             <?php if ($selectedCustomer): ?><section class="panel detail-panel"><div class="panel-heading"><div><p class="eyebrow">CUSTOMER ACCOUNT</p><h2><?= admin_h($selectedCustomer['username']) ?></h2></div><a class="button secondary" href="admin.php?view=customers">Back to customers</a></div><p><?= admin_h($selectedCustomer['email']) ?> · <?= admin_h($selectedCustomer['phone'] ?? '') ?> · Joined <?= admin_h($selectedCustomer['created_at']) ?></p><h3>Purchase history</h3><?php if ($customerPurchases): ?><div class="table-wrap"><table><thead><tr><th>Transaction</th><th>Payment</th><th>Total</th><th>Date</th><th></th></tr></thead><tbody><?php foreach ($customerPurchases as $purchase): ?><tr><td>#<?= (int) $purchase['transaction_id'] ?></td><td><?= admin_h($purchase['payment_method']) ?></td><td>₱<?= number_format((float) $purchase['total'], 2) ?></td><td><?= admin_h($purchase['created_at']) ?></td><td><a class="text-action" href="admin.php?view=transactions&amp;id=<?= (int) $purchase['transaction_id'] ?>">Items</a></td></tr><?php endforeach; ?></tbody></table></div><?php else: ?><p class="empty">No purchases recorded for this account.</p><?php endif; ?></section><?php endif; ?>
             <section class="panel table-panel"><div class="panel-heading"><div><p class="eyebrow">ACCOUNTS</p><h2>Customers <span class="count"><?= count($customers) ?></span></h2></div></div><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Orders</th><th>Lifetime spend</th><th>Joined</th><th></th></tr></thead><tbody>

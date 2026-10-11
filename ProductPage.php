@@ -1,54 +1,9 @@
-<!-- Bookbang/ProductPage.php -->
-
-<?php
-include 'db_connect.php';
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>BookBang - Featured Titles & New Releases</title>
-  <link rel="stylesheet" href="ProductPage.css">
-  <link rel="stylesheet" href="bookbang-theme.css">
-</head>
-<body>
-
-<div id="navbar"></div>
-
-<section class="categories-section">
-  <h2>📚 Our Curated Collection: Featured Titles & New Releases</h2>
-</section>
-
-<div class="book-shelf">
-<?php
-$sql = "SELECT * FROM books";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    echo '
-    <div class="book" onclick="window.location.href=\'ProductDescription.php?id=' . $row['book_id'] . '\'">
-      <div class="cover">
-        <div class="book-header" style="background-image: url(' . $row['image'] . ');"></div>
-      </div>
-      <div class="book-info">
-        <h3>' . htmlspecialchars($row['title']) . '</h3>
-        <p>Author: ' . htmlspecialchars($row['author']) . '</p>
-        <p>Genre: ' . htmlspecialchars($row['genre']) . '</p>
-        <p class="price">₱' . number_format($row['price'], 2) . '</p>
-      </div>
-    </div>';
-  }
-}
-?>
-</div>
-
-<div id="footer"></div>
-
-<script>
-  fetch('navbar.php').then(r => r.text()).then(d => document.getElementById('navbar').innerHTML = d);
-  fetch('footer.php').then(r => r.text()).then(d => document.getElementById('footer').innerHTML = d);
-</script>
-
-</body>
-</html>
+<?php require 'app.php'; $q=substr(trim($_GET['q'] ?? ''),0,200); $genre=trim($_GET['genre'] ?? '');
+$sql='SELECT * FROM books WHERE 1=1';$types='';$args=[];
+if($q!==''){$sql.=" AND (title LIKE ? ESCAPE '!' OR author LIKE ? ESCAPE '!' OR genre LIKE ? ESCAPE '!')";$pattern='%'.str_replace(['!','%','_'],['!!','!%','!_'],$q).'%';$types.='sss';$args=array_fill(0,3,$pattern);}
+if($genre!==''){$sql.=' AND genre=?';$types.='s';$args[]=$genre;}
+$sorts=['title'=>'title','price-low'=>'price*(1-discount/100) ASC','price-high'=>'price*(1-discount/100) DESC','newest'=>'book_id DESC','popular'=>'(SELECT COALESCE(SUM(qty),0) FROM transaction_items WHERE book_id=books.book_id) DESC,title'];
+$sort=$_GET['sort'] ?? 'title';$sql.=' ORDER BY '.($sorts[$sort] ?? 'title');$books=bb_rows($sql,$types,$args);$genres=bb_rows('SELECT DISTINCT genre FROM books ORDER BY genre'); ?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Books | BookBang</title><link rel="stylesheet" href="ProductPage.css"><link rel="stylesheet" href="backend.css"><link rel="stylesheet" href="bookbang-theme.css"></head><body><?php include 'navbar.php'; ?>
+<section class="bb-panel"><h1><?= $q!==''?'Search results for “'.bb_h($q).'”':'Our book collection' ?></h1><p><?= count($books) ?> books found</p><form method="get"><input type="hidden" name="q" value="<?= bb_h($q) ?>"><label>Genre<select name="genre"><option value="">All genres</option><?php foreach($genres as $g): ?><option <?= $genre===$g['genre']?'selected':'' ?>><?= bb_h($g['genre']) ?></option><?php endforeach; ?></select></label><label>Sort<select name="sort"><?php foreach(['title'=>'Title','price-low'=>'Price: low to high','price-high'=>'Price: high to low','newest'=>'Newest','popular'=>'Bestsellers'] as $key=>$label): ?><option value="<?= $key ?>" <?= $sort===$key?'selected':'' ?>><?= $label ?></option><?php endforeach; ?></select></label><button>Apply filters</button> <a href="ProductPage.php">Clear filters</a></form></section>
+<div class="book-shelf"><?php foreach($books as $book): ?><a class="book" href="ProductDescription.php?id=<?= (int)$book['book_id'] ?>" style="text-decoration:none;color:inherit"><div class="cover"><div class="book-header" style="background-image:url('<?= bb_h($book['image']) ?>')"></div></div><div class="book-info"><h3><?= bb_h($book['title']) ?></h3><p>Author: <?= bb_h($book['author']) ?></p><p>Genre: <?= bb_h($book['genre']) ?></p><p class="price">₱<?= number_format(bb_cents($book)/100,2) ?></p></div></a><?php endforeach; ?></div><?php if(!$books): ?><p class="bb-panel">No books match. Try another title, author or genre.</p><?php endif; ?><?php include 'footer.php'; ?></body></html>

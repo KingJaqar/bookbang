@@ -1,256 +1,42 @@
 <?php
-// Bookbang/checkout/checkout.php
-session_start();
-require_once __DIR__ . '/../db_connect.php';
-require_once __DIR__ . '/../app_url.php';
-
-// Resolve user ID
-function resolveUserId($conn) {
-    if (!empty($_SESSION['user_id'])) return intval($_SESSION['user_id']);
-    if (!empty($_SESSION['user'])) {
-        $username = $_SESSION['user'];
-        $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ? LIMIT 1");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        if ($row = $res->fetch_assoc()) {
-            $_SESSION['user_id'] = intval($row['user_id']);
-            $stmt->close();
-            return $_SESSION['user_id'];
-        }
-        $stmt->close();
-    }
-    return null;
+require __DIR__.'/../app.php'; bb_schema(); $error=''; $buyRequested=isset($_GET['buy']); $buy=filter_var($_GET['buy'] ?? '',FILTER_VALIDATE_INT);
+$items=[];
+if($buyRequested){if($buy&&$buy>0){$b=bb_one('SELECT * FROM books WHERE book_id=?','i',[$buy]);if($b){$b['qty']=1;$b['unit_cents']=bb_cents($b);$b['subtotal_cents']=$b['unit_cents'];$items[]=$b;}}if(!$items) http_response_code(404);}
+else $items=bb_cart_items();
+$total=array_sum(array_column($items,'subtotal_cents'));$mode=$buyRequested ? 'buy:'.(int)$buy : 'cart';
+if(empty($_SESSION['checkout_keys'][$mode])) $_SESSION['checkout_keys'][$mode]=bin2hex(random_bytes(32));
+$key=$_SESSION['checkout_keys'][$mode];
+$info=bb_user_id()?bb_one('SELECT first_name,last_name,email,phone FROM users WHERE user_id=?','i',[bb_user_id()]):[];
+if($_SERVER['REQUEST_METHOD']==='POST'){
+ try{bb_check_csrf(); $posted=$_POST['request_key'] ?? '';
+ if(!is_string($posted)||!hash_equals($key,$posted)) throw new InvalidArgumentException('Checkout expired. Refresh and try again.');
+ $existing=bb_one('SELECT transaction_id FROM order_requests WHERE request_key=?','s',[$key]);
+ if($existing) bb_redirect('orders/order.php?id='.$existing['transaction_id']);
+ $first=trim($_POST['first_name'] ?? '');$last=trim($_POST['last_name'] ?? '');$email=trim($_POST['email'] ?? '');$phone=trim($_POST['phone'] ?? '');$address=trim($_POST['address'] ?? '');$city=trim($_POST['city'] ?? '');$postal=trim($_POST['postal_code'] ?? '');
+ if(!$items) throw new InvalidArgumentException('Choose a book before placing an order.');
+ if($first===''||$last===''||strlen($first)>100||strlen($last)>100) throw new InvalidArgumentException('Enter your first and last name (up to 100 characters each).');
+ if(!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($email)>255) throw new InvalidArgumentException('Enter a valid email.');
+ if(!preg_match('/^[+0-9 ()-]{7,30}$/D',$phone)) throw new InvalidArgumentException('Enter a valid phone number.');
+ if(strlen($address)<5||strlen($address)>500||$city===''||strlen($city)>100||!preg_match('/^[a-zA-Z0-9 -]{3,12}$/D',$postal)) throw new InvalidArgumentException('Enter your delivery address, city/province and postal code.');
+ if(($_POST['payment_method'] ?? '')!=='cod') throw new InvalidArgumentException('Only Cash on Delivery is available.');
+ $conn->begin_transaction();
+ try{
+ $data=json_encode(['address'=>$address,'city'=>$city,'postal_code'=>$postal,'status'=>'pending','payment_status'=>'unpaid']);
+ $uid=bb_user_id();$sid=$uid?null:session_id();$method='cod';$amount=$total/100;
+ bb_query('INSERT INTO transactions(user_id,session_id,first_name,last_name,email,phone,payment_method,payment_data,total) VALUES (?,?,?,?,?,?,?,?,?)','isssssssd',[$uid,$sid,$first,$last,$email,$phone,$method,$data,$amount]);$orderId=$conn->insert_id;
+ bb_query('INSERT INTO order_requests(request_key,transaction_id) VALUES (?,?)','si',[$key,$orderId]);
+ foreach($items as $item) bb_query('INSERT INTO transaction_items(transaction_id,book_id,qty,price) VALUES (?,?,?,?)','iiid',[$orderId,$item['book_id'],$item['qty'],$item['unit_cents']/100]);
+ if(!$buy){foreach($items as $item){[$w,$t,$a]=bb_owner();bb_query('DELETE FROM carts WHERE cart_id=? AND '.$w,'i'.$t,array_merge([$item['cart_id']],$a));}}
+ $conn->commit(); $_SESSION['completed_keys'][$mode]=$key;
+ }catch(Throwable $e){$conn->rollback();throw $e;}
+ bb_redirect('orders/order.php?id='.$orderId);
+ }catch(InvalidArgumentException $e){$error=$e->getMessage();}catch(Throwable $e){error_log($e->getMessage());$error='Could not place the order. Your cart is unchanged; please try again.';}
 }
-
-$user_id = resolveUserId($conn);
-$session_key = session_id();
-
-// --- Fetch cart items or buy now ---
-$buyNowItem = $_SESSION['buy_now'] ?? null;
-$cartItems = [];
-$total = 0.0;
-
-if ($buyNowItem) {
-    $book_id = intval($buyNowItem['book_id']);
-$stmt = $conn->prepare("SELECT book_id, title, price, image FROM books WHERE book_id=? LIMIT 1");
-    $stmt->bind_param("i", $book_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($book = $res->fetch_assoc()) {
-        $book['qty'] = 1;
-        $book['subtotal'] = floatval($book['price']);
-        $cartItems[] = $book;
-        $total = $book['subtotal'];
-    }
-    $stmt->close();
-    unset($_SESSION['buy_now']);
-} else {
-    if ($user_id) {
-        $stmt = $conn->prepare("SELECT c.cart_id, c.book_id, c.quantity as qty, b.title, b.price, b.image FROM carts c 
-                        LEFT JOIN books b ON c.book_id = b.book_id 
-                        WHERE c.user_id = ?");
-
-        $stmt->bind_param("i", $user_id);
-    } else {
-       $stmt = $conn->prepare("SELECT c.cart_id, c.book_id, c.quantity as qty, b.title, b.price, b.image FROM carts c 
-                        LEFT JOIN books b ON c.book_id = b.book_id 
-                        WHERE c.session_id = ?");
-
-        $stmt->bind_param("s", $session_key);
-    }
-    $stmt->execute();
-    $cartRes = $stmt->get_result();
-    while ($r = $cartRes->fetch_assoc()) {
-        $r['subtotal'] = floatval($r['price']) * intval($r['qty']);
-        $total += $r['subtotal'];
-        $cartItems[] = $r;
-    }
-    $stmt->close();
-}
-
-// --- Fetch logged-in user info ---
-$user_info = ['first_name'=>'', 'last_name'=>'', 'email'=>'', 'phone'=>''];
-if ($user_id) {
-    $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM users WHERE user_id=? LIMIT 1");
-    $stmt->bind_param("i",$user_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($row = $res->fetch_assoc()) $user_info = $row;
-    $stmt->close();
-}
-
-// --- Handle order submission ---
-if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['place_order'])) {
-    $first_name = trim($_POST['first_name'] ?? '');
-    $last_name  = trim($_POST['last_name'] ?? '');
-    $email      = trim($_POST['email'] ?? '');
-    $phone      = trim($_POST['phone'] ?? '');
-    $payment_method = $_POST['payment_method'] ?? '';
-    $payment_details = [];
-
-    if ($payment_method === 'card') {
-        $card_number = preg_replace('/\D/', '', $_POST['card_number'] ?? '');
-        $expiry = $_POST['expiry'] ?? '';
-        $card_fname = $_POST['card_fname'] ?? '';
-        $card_lname = $_POST['card_lname'] ?? '';
-        $cvv = preg_replace('/\D/', '', $_POST['cvv'] ?? '');
-        if (strlen($card_number) !== 16) die('Card number must be 16 digits.');
-        if (!preg_match('/^\d{2}\/\d{4}$/', $expiry)) die('Expiration must be MM/YYYY.');
-        if (!preg_match('/^[a-zA-Z]+$/', $card_fname) || !preg_match('/^[a-zA-Z]+$/', $card_lname)) die('Names letters only.');
-        if (strlen($cvv)<3 || strlen($cvv)>4) die('CVV invalid.');
-        $payment_details = [
-            'card_last4' => substr($card_number, -4),
-            'expiry' => $expiry,
-            'card_fname' => $card_fname,
-            'card_lname' => $card_lname
-        ];
-    } elseif ($payment_method === 'ewallet') {
-        $wallet_type = $_POST['wallet_type'] ?? '';
-        $wallet_number = preg_replace('/\D/', '', $_POST['wallet_number'] ?? '');
-        if (strlen($wallet_number) !== 11) die('E-Wallet number must be 11 digits.');
-        $payment_details = ['wallet_type'=>$wallet_type,'wallet_last4'=>substr($wallet_number, -4)];
-    } else {
-        die('Select a valid payment method.');
-    }
-
-    if (!empty($cartItems) && $first_name && $last_name && $email && $payment_method) {
-        $conn->begin_transaction();
-        try {
-            $stmt = $conn->prepare("INSERT INTO transactions (user_id, session_id, first_name, last_name, email, phone, payment_method, payment_data, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $json_data = json_encode($payment_details);
-            $stmt->bind_param("isssssssd", $user_id, $session_key, $first_name, $last_name, $email, $phone, $payment_method, $json_data, $total);
-            $stmt->execute();
-            $transaction_id = $stmt->insert_id;
-            $stmt->close();
-
-            $stmt = $conn->prepare("INSERT INTO transaction_items (transaction_id, book_id, qty, price) VALUES (?, ?, ?, ?)");
-            foreach ($cartItems as $item) {
-                $stmt->bind_param("iiid", $transaction_id, $item['book_id'], $item['qty'], $item['price']);
-                $stmt->execute();
-            }
-            $stmt->close();
-
-            if ($user_id) {
-                $stmt = $conn->prepare("DELETE FROM carts WHERE user_id=?");
-                $stmt->bind_param("i", $user_id);
-            } else {
-                $stmt = $conn->prepare("DELETE FROM carts WHERE session_id=?");
-                $stmt->bind_param("s", $session_key);
-            }
-            $stmt->execute();
-            $stmt->close();
-            $conn->commit();
-        } catch (mysqli_sql_exception $error) {
-            $conn->rollback();
-            error_log('Bookbang checkout failed: ' . $error->getMessage());
-            http_response_code(500);
-            die('Could not place the order. No cart items were removed; please try again.');
-        }
-
-        header("Location: ../orders/order.php");
-        exit();
-    }
-}
-
-include __DIR__ . '/../navbar.php';
+// A fresh GET after a completed order starts a new checkout. POST retries retain the old key.
+if($_SERVER['REQUEST_METHOD']==='GET'&&($_SESSION['completed_keys'][$mode] ?? '')===$key){$key=bin2hex(random_bytes(32));$_SESSION['checkout_keys'][$mode]=$key;unset($_SESSION['completed_keys'][$mode]);}
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout | BookBang</title>
-<link rel="stylesheet" href="<?= htmlspecialchars(bookbang_url('checkout/checkout.css'), ENT_QUOTES, 'UTF-8') ?>">
-<link rel="stylesheet" href="<?= htmlspecialchars(bookbang_url('bookbang-theme.css'), ENT_QUOTES, 'UTF-8') ?>">
-
-
-</head>
-<body>
-
-<div class="container">
-<h2>Checkout</h2>
-
-<h3>Items</h3>
-<div class="checkout-items">
-<?php if (!empty($cartItems)): ?>
-    <?php foreach($cartItems as $item): ?>
-        <div style="display:flex; align-items:center; margin:5px 0;">
-
-        
-            <img src="<?= htmlspecialchars(bookbang_url($item['image'] ?? 'default.png'), ENT_QUOTES, 'UTF-8') ?>" 
-     alt="<?= htmlspecialchars($item['title']) ?>" 
-     style="width:60px; height:80px; object-fit:cover; 
-     margin-right:10px; border-radius:4px;">
-
-
-
-            <span style="flex:1;"><?= htmlspecialchars($item['title']) ?> x <?= $item['qty'] ?></span>
-            <span>₱<?= number_format($item['subtotal'],2) ?></span>
-        </div>
-    <?php endforeach; ?>
-    <div style="font-weight:bold; margin-top:10px;">Total: ₱<?= number_format($total,2) ?></div>
-<?php else: ?>
-    <p>Your cart is empty.</p>
-<?php endif; ?>
-</div>
-
-
-<form method="post" id="checkoutForm">
-    <label>First Name</label>
-    <input type="text" name="first_name" value="<?= htmlspecialchars($user_info['first_name']) ?>" required>
-    <label>Last Name</label>
-    <input type="text" name="last_name" value="<?= htmlspecialchars($user_info['last_name']) ?>" required>
-    <label>Email</label>
-    <input type="email" name="email" value="<?= htmlspecialchars($user_info['email']) ?>" required>
-    <label>Phone</label>
-    <input type="text" name="phone" value="<?= htmlspecialchars($user_info['phone']) ?>" required>
-
-    <label>Payment Method</label>
-    <select name="payment_method" id="payment_method" required>
-        <option value="">Select</option>
-        <option value="card">Credit/Debit Card</option>
-        <option value="ewallet">E-Wallet</option>
-    </select>
-
-    <div class="payment-section" id="cardSection">
-        <label>Card Number</label>
-        <input type="text" name="card_number" placeholder="16 digits">
-        <label>Expiration (MM/YYYY)</label>
-        <input type="text" name="expiry" placeholder="MM/YYYY">
-        <label>First Name</label>
-        <input type="text" name="card_fname">
-        <label>Last Name</label>
-        <input type="text" name="card_lname">
-        <label>CVV</label>
-        <input type="text" name="cvv" placeholder="3-4 digits">
-    </div>
-
-    <div class="payment-section" id="ewalletSection">
-        <label>Wallet Type</label>
-        <select name="wallet_type">
-            <option value="gcash">Gcash</option>
-            <option value="paymaya">Paymaya</option>
-            <option value="paypal">Paypal</option>
-        </select>
-        <label>Wallet Number</label>
-        <input type="text" name="wallet_number" placeholder="11 digits">
-    </div>
-
-    <button type="submit" name="place_order">Place Order</button>
-</form>
-</div>
-
-<script>
-const paymentSelect = document.getElementById('payment_method');
-const cardSection = document.getElementById('cardSection');
-const ewalletSection = document.getElementById('ewalletSection');
-
-paymentSelect.addEventListener('change', function(){
-    cardSection.style.display = this.value==='card' ? 'block':'none';
-    ewalletSection.style.display = this.value==='ewallet' ? 'block':'none';
-});
-</script>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout | BookBang</title><link rel="stylesheet" href="../backend.css"></head><body><?php include __DIR__.'/../navbar.php'; ?><main class="bb-panel"><h1>Checkout</h1><?php if($error): ?><p class="bb-error" role="alert"><?= bb_h($error) ?></p><?php endif; ?>
+<?php foreach($items as $item): ?><div class="bb-item"><img src="<?= bb_h(bookbang_url($item['image'])) ?>" alt="<?= bb_h($item['title']) ?>"><span class="bb-title"><?= bb_h($item['title']) ?> x <?= (int)$item['qty'] ?></span><strong>₱<?= number_format($item['subtotal_cents']/100,2) ?></strong></div><?php endforeach; ?>
+<?php if(!$items): ?><p>Your cart is empty or the selected book is unavailable.</p><a href="../ProductPage.php">Browse books</a><?php else: ?><h2>Total: ₱<?= number_format($total/100,2) ?></h2><p>Cash on Delivery. Pay the total when your books arrive.</p><form method="post"><input type="hidden" name="csrf" value="<?= bb_h(bb_csrf()) ?>"><input type="hidden" name="request_key" value="<?= bb_h($key) ?>">
+<?php foreach(['first_name'=>'First name','last_name'=>'Last name','email'=>'Email','phone'=>'Phone','address'=>'Street address','city'=>'City / province','postal_code'=>'Postal code'] as $field=>$label): ?><label><?= $label ?><input type="<?= $field==='email'?'email':'text' ?>" name="<?= $field ?>" value="<?= bb_h($_POST[$field] ?? $info[$field] ?? '') ?>" maxlength="<?= $field==='address'?500:($field==='email'?255:100) ?>" required></label><?php endforeach; ?>
+<label>Payment method<select name="payment_method"><option value="cod">Cash on Delivery (COD)</option></select></label><button name="place_order" value="1">Place COD order</button></form><?php endif; ?></main></body></html>

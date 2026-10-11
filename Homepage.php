@@ -1,7 +1,5 @@
-<!-- Bookbang/Homepage.php  -->
 <?php
-session_start();
-require_once __DIR__ . '/db_connect.php';
+require_once __DIR__ . '/app.php';
 
 // === Create a table to track weekly carousel updates if not exists ===
 $conn->query("
@@ -37,7 +35,7 @@ function getWeeklyBooks($conn, $section, $limit) {
   // ✅ Limit random selection to book_id between 1 and 25
   if ($weekPassed) {
     $ids = [];
-    $res = $conn->query("SELECT book_id FROM books WHERE book_id BETWEEN 1 AND 25 ORDER BY RAND() LIMIT $limit");
+    $res = $conn->query("SELECT book_id FROM books ORDER BY RAND() LIMIT $limit");
     while ($r = $res->fetch_assoc()) $ids[] = $r['book_id'];
     $bookIds = $ids;
 
@@ -49,7 +47,7 @@ function getWeeklyBooks($conn, $section, $limit) {
   }
 
   // Fetch the selected books
-  $idList = implode(',', array_map('intval', $bookIds));
+  $idList = implode(',', array_map('intval', $bookIds)) ?: '0';
   return $conn->query("SELECT * FROM books WHERE book_id IN ($idList)");
 }
 
@@ -57,9 +55,7 @@ function getWeeklyBooks($conn, $section, $limit) {
 $carouselResult = getWeeklyBooks($conn, 'carousel', 6);
 
 // === Fetch fixed 'New Arrivals' ===
-$newArrivalIDs = [1, 6, 11, 16, 21];
-$idList = implode(',', array_map('intval', $newArrivalIDs));
-$newArrivalsResult = $conn->query("SELECT * FROM books WHERE book_id IN ($idList)");
+$newArrivalsResult = $conn->query('SELECT * FROM books ORDER BY book_id DESC LIMIT 5');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -119,8 +115,8 @@ $newArrivalsResult = $conn->query("SELECT * FROM books WHERE book_id IN ($idList
   <!-- === Announcement Bar === -->
   <div class="announcement-bar">
     <ul class="announcement-slider">
-      <li>SAVE UP TO 50% OFF ON SELECTED ITEMS</li>
-      <li>Spend ₱4,999 & Get ₱100 Discount!</li>
+      <li>FIND YOUR NEXT FAVOURITE BOOK</li>
+      <li>CASH ON DELIVERY AVAILABLE</li>
     </ul>
   </div>
 
@@ -149,13 +145,6 @@ $newArrivalsResult = $conn->query("SELECT * FROM books WHERE book_id IN ($idList
     <?php endwhile; ?>
   </div>
 
-  <!-- Floating Chat -->
-  <div class="floating-chat">
-    <button class="btn btn-danger rounded-circle p-3">
-      <i class="bi bi-chat-fill"></i>
-    </button>
-  </div>
-
   <!-- Brief Description -->
   <div class="brief-description">
     <h3 class="text-center">A world of reading awaits you</h3>
@@ -163,9 +152,9 @@ $newArrivalsResult = $conn->query("SELECT * FROM books WHERE book_id IN ($idList
       Create a BookBang account and sign up for our emails. Find out about new releases, shop deals on books, and get reading recommendations from our team.
     </p>
     <p class="text-center">
-      Discover bestsellers, indie gems, and exclusive digital releases to fill your virtual bookshelf anytime, anywhere!
+      Discover bestsellers, indie gems, and new releases to fill your virtual bookshelf anytime, anywhere!
     </p>
-    <div class="text-center"><button>Create Account</button></div>
+    <div class="text-center"><a class="btn btn-danger" href="signup.php">Create Account</a></div>
   </div>
 
   <!-- Footer -->

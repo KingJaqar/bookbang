@@ -1,52 +1,12 @@
-<!-- Bookbang/login.php -->
-
 <?php
-session_start();
-include("db_connect.php");
-
-$error_message = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $loginId = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
-
-    if ($loginId === "" || $password === "") {
-        $error_message = "Username or email and password are required.";
-    } else {
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ? LIMIT 2");
-        $stmt->bind_param("ss", $loginId, $loginId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 1) {
-            $error_message = "More than one account matches. Sign in with your email address.";
-        } elseif ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-
-            if (password_verify($password, $user['password'])) {
-
-                session_regenerate_id(true);
-                $_SESSION['user'] = $user['username'];
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['role'] = $user['role'] ?? 'customer';
-
-                $sessionId = session_id();
-                $userId = $user['user_id'];
-                $mergeCart = $conn->prepare("UPDATE carts SET user_id = ?, session_id = NULL WHERE session_id = ?");
-                $mergeCart->bind_param("is", $userId, $sessionId);
-                $mergeCart->execute();
-
-                header("Location: " . ($_SESSION['role'] === 'admin' ? 'admin.php' : 'ProductPage.php'));
-                exit();
-            } else {
-                $error_message = "Invalid password.";
-            }
-        } else {
-            $error_message = "No account found with that email.";
-        }
-    }
+require __DIR__.'/app.php'; $error=''; $mode='login';
+if($_SERVER['REQUEST_METHOD']==='POST'){
+ try {bb_check_csrf();
+ $attempts=$_SESSION['login_attempts'] ?? ['count'=>0,'start'=>time()]; if(time()-$attempts['start']>900) $attempts=['count'=>0,'start'=>time()];
+ if($attempts['count']>=10) throw new InvalidArgumentException('Too many attempts. Try again in 15 minutes.'); $attempts['count']++; $_SESSION['login_attempts']=$attempts;
+ $id=trim($_POST['email'] ?? ''); $matches=bb_rows('SELECT * FROM users WHERE email=? OR username=? LIMIT 2','ss',[$id,$id]);
+ if(count($matches)!==1 || !password_verify($_POST['password'] ?? '',$matches[0]['password'])) throw new InvalidArgumentException('Email, username or password is incorrect.');
+ bb_sign_in($matches[0]); bb_redirect($matches[0]['role']==='admin' ? 'admin.php' : 'ProductPage.php');
+ }catch(InvalidArgumentException $e){$error=$e->getMessage();}catch(Throwable $e){error_log($e->getMessage()); $error='Unable to sign in. Please try again.';}
 }
-?>
-
-<?php include("login.html"); ?>
-
+require __DIR__.'/account-form.php';

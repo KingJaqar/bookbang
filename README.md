@@ -1,71 +1,75 @@
-# BookBang Setup
+# BookBang
 
-## Vercel storefront
+BookBang is a PHP/MySQL bookstore with search, accounts, saved books, reviews,
+profiles, carts, Cash on Delivery orders and an admin dashboard.
 
-Vercel deploys the public catalogue from the repository root using `npm run build`
-and serves `dist/`. The build creates `index.html` from the existing homepage,
-embeds the navigation and footer, and copies only public styles, scripts, and
-book images. PHP source, Composer dependencies, configuration files, and database
-files are not published. `vercel.json` keeps these build settings in GitHub.
+## Production
 
-Run `npm run build` with Node.js to verify the storefront locally. No npm
-dependencies are required. Generated `dist/` files should not be committed.
+The PHP application is hosted at https://bookbang.xo.je/. The Vercel address
+redirects to that application so accounts and carts use the same origin/session.
+The static build is retained as a fallback; it never publishes PHP or secrets.
 
-The Vercel storefront supports browsing only. Accounts, carts, checkout, and
-reviews require a separately hosted PHP/MySQL backend; their links currently
-show a service availability page. Legacy homepage and catalogue PHP URLs route
-to the corresponding public HTML pages. Other PHP URLs show the availability
-page instead of exposing source. The PHP application below remains available
-for local hosting; deploying it requires a database, persistent sessions, and
-storage for uploaded files.
+Google and Facebook sign-in are intentionally disabled. Checkout accepts **COD
+only**, requires a delivery address, and never requests card or wallet credentials.
+New orders are pending and unpaid. The admin can mark them confirmed, shipped,
+delivered or cancelled; delivered COD orders are marked paid.
+Physical delivery is handled by the shop, not by a courier API.
 
-## InfinityFree PHP hosting
+## PHP setup
 
-Upload the PHP application and its public assets to `htdocs/`; `index.php`
-opens the database-backed homepage. Create the database in the hosting panel,
-then import `database/schema.sql` after removing its initial `CREATE DATABASE`
-and `USE` statements. The panel supplies an account-prefixed database name.
+Use PHP 8+ with mysqli/mysqlnd, fileinfo and sessions, and MySQL 5.7+ or MariaDB.
+Import `database/schema.sql`. On InfinityFree, first remove its CREATE DATABASE
+and USE statements and select the account-prefixed database in phpMyAdmin.
+New recovery, order-request and newsletter tables are created additively by
+`bb_schema()` before the relevant flows run. Existing users/books/orders are kept.
 
-Copy `hosting-config.example.php` to `hosting-config.php` on the PHP host and
-enter the MySQL host, username, password, and assigned database name. Environment
-variables take precedence when present. Never commit the populated configuration.
-The included `.htaccess` disables directory listings and direct configuration
-downloads. Upload neither the SQL schema nor debugging files to the public site.
+Copy `hosting-config.example.php` to the ignored `hosting-config.php` on the host.
+Set DB_HOST, DB_USER, DB_PASSWORD and DB_NAME. Environment variables override that
+file; DB_PORT is optional (default 3306). Never commit populated credentials.
 
-Social sign-in requires installed Composer libraries, valid provider credentials,
-and registered production callback URLs. Leave social sign-in disabled until
-those are configured. The existing checkout records orders but does not integrate
-with a payment processor; use it only as a demonstration until payments are added.
+Upload the application to `htdocs`. Include `.htaccess` and `uploads/.htaccess`.
+The first blocks direct access to private helpers/configuration and directory
+listings; the second blocks executable files in uploaded-picture directories.
+Upload only public application files, not Git data, tests, SQL, vendor, or scripts.
 
-## Requirements
+## Accounts and recovery
 
-- PHP 8.1 or newer with `mysqli` and `mysqlnd` enabled
-- MySQL 5.7+ or a compatible MariaDB release
-- Apache/XAMPP, with this project directory served as `/Bookbang`
-- Composer dependencies are already included in `vendor/`; rerun `composer install` after changing `composer.json`
+Sign-up requires a unique email/username and matching passwords of 12–72 characters.
+Sign-in accepts email or username. Guest carts, saved books and guest orders from
+the current session transfer to the account on sign-in or sign-up.
 
-## Database
+Customers receive a private recovery code after sign-up. They save it themselves
+and use it with their email at `forgot-password.php`; no email-sending service is
+required. Successful reset rotates the recovery code and invalidates older
+signed-in sessions. Signed-in customers can regenerate a code with their current
+password on their profile page. Keep codes and passwords out of screenshots/logs.
 
-Import `database/schema.sql` into MySQL. It creates the `bookbang_db` database, the tables used by the bookstore flows, and the 25-book starter catalogue with local cover paths.
+Admin access uses `users.role='admin'`. Assign it only to the shop owner's specified
+account through the database panel. There are no public/default admin credentials.
+The dashboard manages the catalogue, customers, orders and opted-in subscribers.
+Newsletter signup saves subscriptions; automatic email delivery is not configured.
 
-```sh
-mysql -u root -p < database/schema.sql
+## Validation
+
+`tests/integration.py` exercises the actual PHP endpoints and checks database
+results in a disposable local database. It refuses production by using fixed
+localhost addresses. Synthetic accounts/orders never contact the live site.
+
+Start an isolated MariaDB instance on port 3311 and import the schema. Then:
+
+```powershell
+$env:DB_HOST='127.0.0.1'
+$env:DB_PORT='3311'
+C:/xampp/php/php.exe -S 127.0.0.1:8090 -t .
+# In another terminal:
+python tests/integration.py
 ```
 
-The default connection is `localhost`, user `root`, blank password, database `bookbang_db`, which matches a default local XAMPP installation. Set these environment variables for other installations; do not put production credentials in PHP files:
+The suite covers search/filtering, registration/login, duplicate identities,
+CSRF checks, cart merging and ownership, discounts, avatars and profile changes,
+saved books/reviews, recovery, COD validation and persistence, Buy Now refreshes,
+idempotent submissions, order ownership/history, admin CRUD/fulfilment and
+subscription/unsubscribe. Run `npm run build` to validate the Vercel fallback.
 
-- `DB_HOST`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_NAME`
-
-The web server process must receive the variables. For Apache, configure them in its service environment or Apache configuration, then restart Apache.
-The SQL file creates `bookbang_db`; if you set a different `DB_NAME`, change the database name at the top of `database/schema.sql` to match before importing.
-
-## Run
-
-Place the project folder under the web server document root so it is reachable at `http://localhost/Bookbang/`. Open `http://localhost/Bookbang/Homepage.php`.
-
-Google and Facebook sign-in additionally require valid provider credentials and callback URLs in their respective config files. Email/password signup, catalogue browsing, cart, checkout, and order history use the local MySQL database.
-
-`Shop.php` is a separate legacy motorcycle-products page, not part of the bookstore schema. It uses `SHOP_DB_HOST`, `SHOP_DB_USER`, `SHOP_DB_PASSWORD`, and `SHOP_DB_NAME` and expects a `products` table in that database.
+Legacy HTML/account/shop links redirect to the current PHP flows. The old
+motorcycle-products database is no longer required.

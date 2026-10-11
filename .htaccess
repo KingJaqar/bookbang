@@ -1,6 +1,17 @@
 DirectoryIndex index.php
 Options -Indexes
 
-<FilesMatch "^(hosting-config\.php|db_connect\.php|composer\..*|.*\.(sql|md|lock|phar|txt)|\.env.*)$">
+RewriteEngine On
+RewriteRule ^login\.html$ login.php [R=302,L]
+RewriteRule ^signup\.html$ signup.php [R=302,L]
+RewriteRule ^Homepage\.html$ Homepage.php [R=302,L]
+RewriteRule ^ProductPage\.html$ ProductPage.php [R=302,L]
+RewriteRule ^ProductDescription\.html$ ProductPage.php [R=302,L]
+RewriteRule ^cart/cart\.html$ cart/cart.php [R=302,L]
+RewriteRule ^checkout/checkout\.html$ checkout/checkout.php [R=302,L]
+RewriteRule ^orders/order\.html$ orders/order.php [R=302,L]
+RewriteRule ^user/user\.html$ user/user.php [R=302,L]
+
+<FilesMatch "^(hosting-config\.php|db_connect\.php|app\.php|account-form\.php|composer\..*|.*\.(sql|md|lock|phar|txt|py)|\.env.*)$">
   Require all denied
 </FilesMatch>

@@ -1,11 +1,1 @@
-<?php
-session_start();
-require_once 'facebook-config.php';
-
-$helper = $fb->getRedirectLoginHelper();
-$permissions = ['email']; 
-
-$loginUrl = $helper->getLoginUrl($fb_redirect, $permissions);
-
-header("Location: " . $loginUrl);
-exit();
+<?php http_response_code(503); echo 'Social sign-in is disabled. Please use email/password sign-in.';
