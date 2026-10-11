@@ -4,6 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "redirects": [
+    { "source": "/", "destination": "https://bookbang.xo.je/", "permanent": false },
     { "source": "/unavailable.html", "destination": "https://bookbang.xo.je/help.php", "permanent": false },
     { "source": "/:path*", "destination": "https://bookbang.xo.je/:path*", "permanent": false }
   ]
