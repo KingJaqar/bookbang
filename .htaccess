@@ -1,0 +1,6 @@
+DirectoryIndex index.php
+Options -Indexes
+
+<FilesMatch "^(hosting-config\.php|db_connect\.php|composer\..*|.*\.(sql|md|lock|phar|txt)|\.env.*)$">
+  Require all denied
+</FilesMatch>

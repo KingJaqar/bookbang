@@ -1,10 +1,12 @@
 <?php
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-$host = getenv('DB_HOST') ?: 'localhost';
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASSWORD') ?: '';
-$db = getenv('DB_NAME') ?: 'bookbang_db';
+$configPath = __DIR__ . '/hosting-config.php';
+$hostingConfig = is_file($configPath) ? require $configPath : [];
+$host = getenv('DB_HOST') ?: ($hostingConfig['DB_HOST'] ?? 'localhost');
+$user = getenv('DB_USER') ?: ($hostingConfig['DB_USER'] ?? 'root');
+$pass = getenv('DB_PASSWORD') ?: ($hostingConfig['DB_PASSWORD'] ?? '');
+$db = getenv('DB_NAME') ?: ($hostingConfig['DB_NAME'] ?? 'bookbang_db');
 
 try {
     $conn = new mysqli($host, $user, $pass, $db);

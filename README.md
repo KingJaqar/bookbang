@@ -19,6 +19,24 @@ page instead of exposing source. The PHP application below remains available
 for local hosting; deploying it requires a database, persistent sessions, and
 storage for uploaded files.
 
+## InfinityFree PHP hosting
+
+Upload the PHP application and its public assets to `htdocs/`; `index.php`
+opens the database-backed homepage. Create the database in the hosting panel,
+then import `database/schema.sql` after removing its initial `CREATE DATABASE`
+and `USE` statements. The panel supplies an account-prefixed database name.
+
+Copy `hosting-config.example.php` to `hosting-config.php` on the PHP host and
+enter the MySQL host, username, password, and assigned database name. Environment
+variables take precedence when present. Never commit the populated configuration.
+The included `.htaccess` disables directory listings and direct configuration
+downloads. Upload neither the SQL schema nor debugging files to the public site.
+
+Social sign-in requires installed Composer libraries, valid provider credentials,
+and registered production callback URLs. Leave social sign-in disabled until
+those are configured. The existing checkout records orders but does not integrate
+with a payment processor; use it only as a demonstration until payments are added.
+
 ## Requirements
 
 - PHP 8.1 or newer with `mysqli` and `mysqlnd` enabled
