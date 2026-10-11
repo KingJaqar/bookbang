@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $flash = $_SESSION['admin_flash'] ?? '';
 unset($_SESSION['admin_flash']);
-$stats = $conn->query("SELECT (SELECT COUNT(*) FROM books) AS books, (SELECT COUNT(*) FROM users WHERE role = 'customer') AS customers, (SELECT COUNT(*) FROM transactions) AS transactions, (SELECT COALESCE(SUM(total), 0) FROM transactions) AS revenue")->fetch_assoc();
+$stats = $conn->query("SELECT (SELECT COUNT(*) FROM books) AS books, (SELECT COUNT(*) FROM users WHERE role = 'customer') AS customers, (SELECT COUNT(*) FROM transactions) AS transactions, (SELECT COALESCE(SUM(total), 0) FROM transactions WHERE payment_method='cod' AND JSON_UNQUOTE(JSON_EXTRACT(payment_data, '$.payment_status'))='paid') AS revenue")->fetch_assoc();
 $editBook = null;
 $selectedCustomer = null;
 $customerPurchases = [];
